@@ -25,26 +25,46 @@ def detect_employer_column(df):
 
 
 def load_and_clean(data_dir="data"):
-    """Load all H1B CSV files and clean them."""
+    """Load and clean all H1B CSV files."""
     all_files = sorted(glob(os.path.join(data_dir, "h1b_datahubexport-*.csv")))
     dfs = []
 
     for f in all_files:
         year = int(os.path.basename(f).split("-")[-1].split(".")[0])
         df = pd.read_csv(f)
-        emp_col = detect_employer_column(df)
+
+        # Standardize all column names early
+        df.columns = df.columns.str.strip().str.replace(" ", "_")
+
+        # Detect and rename employer column
+        emp_col = None
+        for name in ["Employer", "Employer_Name", "EMPLOYER", "EMPLOYER_NAME"]:
+            if name in df.columns:
+                emp_col = name
+                break
+        if emp_col is None:
+            raise ValueError(f"Employer column not found in {f}")
         df.rename(columns={emp_col: "Employer"}, inplace=True)
 
-        df.columns = df.columns.str.strip().str.replace(" ", "_")
+        # Ensure numeric types for approval/denial columns
         for col in ["Initial_Approval", "Continuing_Approval",
                     "Initial_Denial", "Continuing_Denial"]:
             if col in df.columns:
                 df[col] = pd.to_numeric(df[col], errors="coerce").fillna(0)
+            else:
+                # fallback for unexpected column names (e.g., “Initial_Approvals”)
+                alt = [c for c in df.columns if col.lower().replace("_", " ") in c.lower()]
+                if alt:
+                    df[col] = pd.to_numeric(df[alt[0]], errors="coerce").fillna(0)
+                else:
+                    df[col] = 0
 
+        # Compute totals
         df["Total_Approvals"] = df["Initial_Approval"] + df["Continuing_Approval"]
         df["Total_Denials"] = df["Initial_Denial"] + df["Continuing_Denial"]
         df["Total_Applications"] = df["Total_Approvals"] + df["Total_Denials"]
         df["Year"] = year
+
         dfs.append(df)
 
     df_all = pd.concat(dfs, ignore_index=True)

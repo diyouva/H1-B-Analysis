@@ -1,0 +1,502 @@
+COMPANY NAME,NUMBER OF H1B SPONSORSHIPS 2023,GRADE 2023
+Alphabet,,A
+Apple,3883,A
+IBM,2527,A
+Costco Wholesale,106,A
+ExxonMobil,9,A
+Microsoft Corp,7677,A
+Wells Fargo,266,A
+Chevron,34,A
+Citigroup,144,A
+Morgan Stanley,511,A
+Meta Platforms,3853,A
+Amazon,,A
+Pfizer,46,A
+Comcast,571,A
+American Express,94,A
+General ELECTRICAL,70,A
+Tesla,1296,A
+General Motors,450,A
+Merck & Co,,A
+AbbVie,164,A
+Elevance Health,4,A
+Raytheon Technologies,3,A
+Oracle,981,A
+PepsiCo,62,A
+ConocoPhillips,49,A
+Cisco Systens INC,1272,A
+Deere and Company,52,A
+Bristol Myers Squibb,219,A
+Marathon Petroleum,,A
+Caterpillar,242,A
+Charles Schwab,25,A
+Visa,410,A
+Ford Motor,661,A
+NextEra Energy,25,A
+Phillips 66,10,A
+Charter Communications,561,A
+Abbott Laboratories,61,A
+Danaher,2,A
+Amgen,477,A
+Lockheed Martin,1,A
+Lowes,388,A
+Valero Energy,14,A
+Occidental Petroleum,25,A
+FedEx,244,A
+MetLife,103,A
+Southern Company,4,A
+Qualcomm,3022,A
+Duke Energy,2,A
+Honeywell International,128,A
+McKesson,80,A
+Mondelez International,,A
+Union Pacific,16,A
+Eli Lilly,161,A
+Humana,282,A
+Archer Daniels Midlands,95,A
+Nike,40,A
+Gilead Sciences,223,A
+BlackRock,349,A
+Netflix,201,A
+Mastercard,543,A
+PayPal,703,A
+NVIDIA,977,A
+General Dynamics,24,A
+EOG Resources,16,A
+Aflac,3,A
+Kraft Heinz Company,13,A
+Dow Jones and Company,41,A
+Schlumberger Technology corp,103,A
+Cheniere Energy,9,A
+AmerisourceBergen,,A
+Fiserv,286,A
+Starbucks,169,A
+Exelon,27,A
+American Electric Power,29,A
+Texa Instruments,150,A
+Applied Materials,357,A
+Pioneer Natural Resources,7,A
+Nucor,7,A
+Micron Technology Corp,296,A
+Lennar,8,A
+Progressive,14,A
+Berkshire Hathaway,5,A
+Delta Airlines,99,A
+Marsh & McLennan,6,A
+Ameriprise Financial services inc,61,A
+Kinder Morgan,4,A
+Stryker Corp,55,A
+Dollar General,45,A
+HP INC,190,A
+Paccar,48,A
+CSX Tech Inc,20,A
+Becton Dickinson and Company,62,A
+SAP America,335,A
+State Street Bank & Trust company,251,A
+Analog Devices Inc,173,A
+AT&T Services Inc,271,A
+Consolidated Edison,2,A
+General Mills,24,A
+Tyson Foods Inc,21,A
+United Airlines Inc,18,A
+Cummins,734,A
+Intel Corp,3576,A
+Marriott International,79,A
+Boeing Distribution Services,7,A
+Regeneron Pharmaceuticals,125,A
+Emerson Electrical Co,3,A
+Norfolk Southern Corp,22,A
+Devon Energy Corp,3,A
+American Tower Corp,19,A
+Lam Research Corp,165,A
+Prologis Management LLC,8,A
+Carrier Corp,5,A
+Corteva Agriscience LLC,40,A
+Williams Sonoma Inc,21,A
+Intuit Inc,570,A
+Parker Hannifin Corp,25,A
+Oneok Services Company LLC,5,A
+Eversource Energy Service Company,10,A
+Walgreen CO,113,A
+American Airlines Inc,244,A
+Republic Services Inc,14,A
+Halliburton Energy Services,34,A
+Hewlett Packard Enterprise,591,A
+Vmware Inc,726,A
+Citizens Financial Group,156,A
+Warner.Bros Entertainment,6,A
+Illinoise Tool Works,20,A
+DTE Energy Services,9,A
+Advanced Micro Devices Inc,543,A
+Bunge Management Services,8,A
+Allstate Insurance Company,39,A
+Entergy Services LLC,25,A
+L3Harris Technologies Inc,7,A
+Boston Scientific Corp,85,A
+Cognizant Technology Solutions,1059,A
+Biogen Inc,2,A
+Colgate Palmolive Company,3,A
+AutoZone Inc,65,A
+Hess Corp,4,A
+Vertex Pharmaceuticals Inc,110,A
+PPG Industries Inc,25,A
+Crown Castle USA Inc,21,A
+Cardinal Health Inc,2,A
+EcoLab USA Inc,26,A
+Uber Technologies Inc,645,A
+Iqvia Inc,243,A
+United Rentals Inc,10,A
+Gallagher and Associates,3,A
+The Mosaic Company,2,A
+Ross Stores,2,A
+Best Buy,184,A
+Amphenol,3,A
+KLA,190,A
+Ally Financial,9,A
+Corning Inc,34,A
+Genuine Parts,50,A
+Steel Dynamics,1,A
+Southwest Airlines,81,A
+Omnicom Media Group Holdings INC,5,A
+International Paper,22,A
+Dish Network,182,A
+Westlake Chemical Corporation,,A
+AirBnB,158,A
+Equinix,106,A
+The Hershey Company,6,A
+The Microchip Company,116,A
+Albemarle Corporation,9,A
+Zoetis INC,89,A
+Realty Income Corporation,1,A
+Berkley Insurance Company,15,A
+Unum Group,25,A
+Public Storage,7,A
+Otis Elevator Company,15,A
+Kellogg North America Company,4,A
+Globalfoundries US INC,76,A
+Celanese Corporation,8,A
+Motorola Solutions INC,143,A
+PPL Electric Utilities Corporation,1,A
+Molina Healthcare INC,40,A
+Tractor Supply Company,43,A
+Reliance Steel & Aluminum CO,1,A
+KKR Credit Advisors US LLC,6,A
+Cintas Corporation,19,A
+Conagra Brands INC,12,A
+Arrow Electronics INC,51,A
+Stanley Black & Decker INC,61,A
+Expeditors International of Washington INC,12,A
+Marathon OIL Company,,A
+Flex Consulting Group INC,17,A
+Intuitive Surgical Operations INC,161,A
+Baxter Healthcare Corporation,14,A
+Rockwell Automation INC,56,A
+Markel Corporation,3,A
+Monster Worldwide INC,,A
+Carnival Corporation,31,A
+Lincoln National Corporation,42,A
+Nasdaq INC,7,A
+Agilent Technologies INC,58,A
+Moodys Analytics INC,130,A
+Ebay INC,701,A
+Borgwarner PDS USA INC,119,A
+AES US Services LLC,3,A
+Edwards Lifesciences LLC,47,A
+Macys Systems and Technology INC,94,A
+Constellation Brands INC,3,A
+CH Robinson Worldwide INC,12,A
+Franklin Templeton Investments,4,A
+Royal Caribbean Cruises LTD,11,A
+Arista Networks INC,111,A
+Lithia Motors INC,,A
+Electronic Arts INC,201,A
+Old Dominion Freight Line INC,1,A
+Paychex INC,,A
+Quanta Technology LLC,11,A
+Avalonbay Communities INC,7,A
+Dover Corporation,7,A
+Coupang Global LLC,53,A
+Ametek INC,2,A
+Jacobs Engineering Group INC,120,A
+Comerica Management Company,39,A
+Live Nation Worldwide INC,30,A
+Welltower INC,4,A
+Dicks Sporting Goods INC,13,A
+Synopsys INC,157,A
+T Rowe Price Associates INC,58,A
+Fortinet INC,153,A
+LPL Financial LLC,125,A
+Copart INC,51,A
+Vistra Corporate Services Company,13,A
+Brookfield Property Group LLC,1,A
+Cadence Design Systems INC,268,A
+NRG Energy INC,23,A
+East West Bank,35,A
+Coinbase INC,96,A
+Expedia INC,376,A
+Western Digital Technologies INC,440,A
+Keysight Technologies INC,121,A
+Msci INC,111,A
+Quest Diagnostics Incorporated,42,A
+Agco Corporation,23,A
+Autodesk INC,247,A
+Western Alliance Bank,48,A
+Avnet INC,19,A
+Webster Bank,5,A
+Resmed Corp,4,A
+Owens Corning Sales LLC,,A
+Brighthouse Services LLC,,A
+Mettler Toledo LLC,8,A
+Westrock Services INC,6,A
+Leidos INC,74,A
+Servicenow INC,799,A
+Netapp INC,138,A
+Voya Investment Management LLC,6,A
+LAS Vegas Sands Corp,1,A
+Packaging Corporation of America,,A
+Idexx Laboratories INC,18,A
+Gartner INC,60,A
+Skyworks Solutions INC,62,A
+Synovus Financial Corp,,A
+Ingersoll Rand Company,,A
+Cleveland Cliffs INC,1,A
+Brown Forman Corporation,2,A
+Crown Equipment Corporation,17,A
+Masco Corporation,2,A
+Avery Dennison Corporation,21,A
+BJS Wholesale Club INC,39,A
+Asbury Automotive Group INC,,A
+Mccormick & Company INC,1,A
+Extra Space Management INC,1,A
+Berry Global INC,2,A
+Eastman Chemical Company,15,A
+Murphy Brown LLC,9,A
+US Foods INC,6,A
+Invesco Group Services INC,55,A
+Interactive Brokers LLC,6,A
+Hologic INC,13,A
+Verisign INC,10,A
+Frost Bank,19,A
+Williams Sonoma INC,21,A
+Ryder System INC,34,A
+Liberty Mutual Group INC,40,A
+Palo Alto Networks INC,337,A
+Valley National Bank,7,A
+Henry Schein INC,5,A
+Jones Lang Lasalle Americas INC,59,A
+Snap ON Incorporated,1,A
+Clune Construction Company LP,5,A
+AON Consulting INC,23,A
+AXIS Specialty US Services,13,A
+Digitas INC,13,A
+Ansys INC,107,A
+Brunswick Corporation,26,A
+Deloitte & Touche LLP,1506,A
+Ernst & Young US LLP,10685,A
+Jsmn International INC,11,A
+JSM Consulting INC,10,A
+Genworth North America Corporation,15,A
+Milliman INC,24,A
+Munich American Reassurance Company,5,A
+Reliastar Life Insurance Company,2,A
+Willis Towers Watson US LLC,73,A
+Axiscades INC,20,A
+Bill ME Later INC,26,A
+DGN Technologies INC,53,A
+Ivynova Solutions INC,9,A
+Jacobs Engineering Group INC,120,A
+Piper Aircraft INC,3,A
+Rivian Automotive LLC,489,A
+Rockwell Collins INC,154,A
+Zoox INC,199,A
+General Mills INC,24,A
+Ginkgo Bioworks INC,24,A
+Purple Web INC,24,A
+Resource Innovations INC,15,A
+Vastek INC,137,A
+Wolfram Research INC,9,A
+Workday INC,255,A
+Olin Partnership LTD,1,A
+Davita INC,61,A
+Whirlpool Corporation,49,A
+Aramark Management LLC,2,A
+Equifax INC,207,A
+Old National Bank,5,A
+Commercial Metals Company,3,A
+Ansys INC,107,A
+Doordash INC,287,A
+Lear Corporation,32,A
+Dexcom INC,60,A
+Wintrust Financial Corporation,19,A
+Chewy INC,221,A
+FMC Technologies INC,8,A
+United Natural Foods INC,4,A
+Pinnacle Technical Resources INC,30,A
+Veeva Systems INC,52,A
+Ss&c Technologies INC,74,A
+Seagen INC,60,A
+Atlassian INC,8,A
+Broadridge Financial Solutions INC,82,A
+Tapestry INC,19,A
+Teradyne INC,20,A
+Illumina INC,106,A
+Booz Allen Hamilton INC,17,A
+Idex Service Corporation,4,A
+Galaxy Software Solutions INC,5,A
+Enphase Energy INC,26,A
+Crowdstrike INC,68,A
+Hyatt Corporation,23,A
+Prosperity Service Group LLC,4,A
+Onemain General Services Corporation,76,A
+Bank OZK,10,A
+Lamb Weston INC,1,A
+Columbia Bank,1,A
+Datadog INC,43,A
+Monolithic Power Systems INC,17,A
+Align Technology INC,48,A
+Insulet Corporation,18,A
+Hubbell Power Systems INC,6,A
+Hubspot INC,87,A
+Northern Natural GAS Company,4,A
+United Therapeutics Corporation,6,A
+Roblox Corporation,137,A
+Advance Auto Business Support LLC,3,A
+Rollins INC,1,A
+Bloomberg LP,356,A
+Google LLC,9443,A
+Hubspot INC,87,A
+Meta Platforms INC,3853,A
+Opportunity Financial LLC,6,A
+Oracle America INC,981,A
+Robinhood Markets INC,132,A
+Tata Consultancy Services Limited,8488,A
+Advanced Micro Devices INC,543,A
+Advantest America INC,28,A
+DRW Holdings LLC,24,A
+Expedia INC,376,A
+Facebook INC,,A
+Ironclad INC,21,A
+Jfrog INC,10,A
+Jump Operations LLC,35,A
+Karsun Solutions LLC,19,A
+Lawrence Berkeley National Laboratory,160,A
+Linkedin Corporation,912,A
+Loom INC,9,A
+Marsh USA INC,8,A
+Moloco INC,29,A
+Nagarro INC,279,A
+Pure Storage INC,165,A
+Qualcomm Technologies INC,3022,A
+Rivos INC,32,A
+Duolingo INC,28,A
+Envestnet Financial Technologies INC,29,A
+Domino Data LAB INC,7,A
+Hudson River Trading LLC,33,A
+Jane Street Group LLC,29,A
+Lucid Software INC,32,A
+Verkada INC,44,A
+Virtu Financial Operating LLC,16,A
+Whatnot INC,18,A
+Ziprecruiter INC,14,A
+Metricstream INC,6,A
+Tredence INC,98,A
+North America Service Center for Chinese Students LLC,3,A
+Prime Healthcare Management INC,48,A
+Broadcom Corporation,79,A
+Didi Research America LLC,16,A
+Emonics LLC,89,A
+Formfactor INC,25,A
+Guidewire Software INC,85,A
+Hanwha Q Cells USA INC,10,A
+Nordstrom INC,175,A
+Okta INC,107,A
+Shure Incorporated,22,A
+Synchrony Bank,57,A
+Tigergraph INC,3,A
+Uhnder INC,3,A
+Geekplus America INC,20,A
+HYC USA INC,1,A
+PCE Paragon Solutions USA INC,12,A
+Better Holdco INC,10,A
+Dana Farber Cancer Institute,128,A
+Goldman Sachs Services LLC,664,A
+Babeltime INC,1,A
+Cowen INC,3,A
+Mizuho Securities USA LLC,14,A
+Compass Group USA INC,41,A
+Juul Labs INC,18,A
+Kemin Industries INC,2,A
+Nutrition Therapy Essentials INC,1,A
+Perfect Day INC,2,A
+ARM INC,166,A
+BP America INC,24,A
+CAC Auto Group LLC,6,A
+Glucobit INC,2,A
+Independent Living Systems LLC,2,A
+Axtria INC,157,A
+Benefits Science LLC,5,A
+Interlake Mecalux INC,3,A
+LG Energy Solution Michigan INC,12,A
+Mckinsey & Company INC United States,611,A
+Mclane CO INC,2,A
+Mediterranean Shipping Company USA INC,21,A
+PMG Worldwide LLC,11,A
+the Raymond Corporation,8,A
+Interpro INC,11,A
+Pricewaterhousecoopers LLP,422,A
+United Software Group INC,8,A
+Inovalon INC,47,A
+Crowe LLP,54,A
+Malonebailey LLP,12,A
+Standish Management LLC,11,A
+Quizlet INC,8,A
+Brainlab INC,8,A
+First Solar INC,19,A
+Ampcus INC,7,A
+Bytedance INC,713,A
+C2 Educational Systems INC,6,A
+Capital One Services LLC,545,A
+Castle Global INC,7,A
+IXL Learning INC,21,A
+Knav PA,19,A
+Noble House Home Furnishings LLC,1,A
+Simbiosys INC,2,A
+Wolfram Research INC,9,A
+Anrok INC,2,A
+C3ai INC,72,A
+Cyberbridge International,9,A
+DRW Holdings LLC,24,A
+Michaels Stores INC,48,A
+Moloco INC,29,A
+Nokia of America Corporation,256,A
+Nuro INC,37,A
+Rubrik INC,66,A
+Aditi Consulting LLC,25,A
+Beth Israel Deaconess Medical Center INC,61,A
+Bofa Securities INC,179,A
+CHA Consulting INC,19,A
+Dynamic Motion Control INC,2,A
+Hyzon Motors INC,7,A
+ITC Infotech USA INC,121,A
+Milwaukee Electric Tool Corporation,52,A
+Neudesic LLC,18,A
+Rimkus Consulting Group INC,4,A
+Stout Risius Ross LLC,14,A
+Uchicago Argonne LLC,112,A
+TD Bank National Association,42,A
+UBS Business Solutions US LLC,197,A
+Asml US LP,339,A
+Coalition INC,18,A
+Allen Institute,31,A
+Carnegie Mellon University,21,A
+Isee INC,4,A
+Ocbang INC,6,A
+Infosys Limited,7753,A
+Insightfinder INC,6,A
+Shipbob INC,3,A
+Sisu Data INC,3,A
+Symetra Life Insurance Company,10,A
+Varis LLC,13,A
+Wyze Labs INC,16,A
+NOTE:N/A INDICATES THAT NO H1B SPONSORSHIPS WERE APPLIED FOR TO THE COMPANY FOR THE YEAR 2023,NOTE:N/A INDICATES THAT NO H1B SPONSORSHIPS WERE APPLIED FOR TO THE COMPANY FOR THE YEAR 2023,NOTE:N/A INDICATES THAT NO H1B SPONSORSHIPS WERE APPLIED FOR TO THE COMPANY FOR THE YEAR 2023
+No record found,No record found,No record found
