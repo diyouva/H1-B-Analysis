@@ -64,36 +64,50 @@ def load_and_clean(data_dir="data"):
         emp_col = detect_employer_column(df)
         df.rename(columns={emp_col: "Employer"}, inplace=True)
 
-        # Convert numeric fields safely and remove non-numeric characters
-        for col in ["Initial_Approval", "Continuing_Approval", "Initial_Denial", "Continuing_Denial"]:
-            match = [c for c in df.columns if col.lower().replace("_", " ") in c.lower()]
-            if match:
+        # Smart matching for numeric columns with flexible naming
+        name_map = {
+            "Initial_Approvals": ["Initial_Approval", "INITIAL_APPROVALS", "Initial Approvals"],
+            "Continuing_Approvals": ["Continuing_Approval", "CONTINUING_APPROVALS", "Continuing Approvals"],
+            "Initial_Denials": ["Initial_Denial", "INITIAL_DENIALS", "Initial Denials"],
+            "Continuing_Denials": ["Continuing_Denial", "CONTINUING_DENIALS", "Continuing Denials"],
+        }
+
+        for target, aliases in name_map.items():
+            found = None
+            for alt in aliases:
+                match = [c for c in df.columns if alt.lower().replace("_", "") in c.lower().replace("_", "")]
+                if match:
+                    found = match[0]
+                    break
+
+            if found:
                 cleaned = (
-                    df[match[0]]
+                    df[found]
                     .astype(str)
                     .replace(r"[^0-9.\-]", "", regex=True)
                     .replace("", "0")
                 )
-                df[col] = pd.to_numeric(cleaned, errors="coerce").fillna(0)
+                df[target] = pd.to_numeric(cleaned, errors="coerce").fillna(0)
             else:
-                df[col] = 0
+                print(f"Warning: Column not found for {target} in {os.path.basename(f)}. Filled with zeros.")
+                df[target] = 0
 
-        # Compute derived totals
-        df["Total_Approvals"] = df["Initial_Approval"] + df["Continuing_Approval"]
-        df["Total_Denials"] = df["Initial_Denial"] + df["Continuing_Denial"]
+        # Compute totals
+        df["Total_Approvals"] = df["Initial_Approvals"] + df["Continuing_Approvals"]
+        df["Total_Denials"] = df["Initial_Denials"] + df["Continuing_Denials"]
         df["Total_Applications"] = df["Total_Approvals"] + df["Total_Denials"]
         df["Year"] = year
         dfs.append(df)
 
     df_all = pd.concat(dfs, ignore_index=True)
 
-    # Verify totals are numeric
+    # Final numeric enforcement
     for col in ["Total_Approvals", "Total_Denials", "Total_Applications"]:
-        df_all[col] = pd.to_numeric(df_all[col], errors="coerce").fillna(0)
+        df_all[col] = pd.to_numeric(df_all[col], errors="coerce").fillna(0).astype(int)
 
-    print(f"✅ Loaded {len(df_all):,} total H-1B records from {len(all_files)} files.")
-    print("✅ Numeric verification successful. Example yearly totals:")
-    print(df_all.groupby("Year")[["Total_Approvals", "Total_Denials"]].sum().head())
+    print(f"Loaded {len(df_all):,} total H-1B records from {len(all_files)} files.")
+    print("Example yearly totals:")
+    print(df_all.groupby("Year")[["Total_Approvals", "Total_Denials", "Total_Applications"]].sum().head())
 
     return df_all
 
@@ -108,25 +122,25 @@ def integrate_employers(
     cpt_path="data/cpt_employers_day1cptuniversities_bs4.csv",
 ):
     """Merge H-1B data with Fortune500, OPT, and CPT datasets."""
-    # Fortune 500 dataset
+    # Fortune 500
     fortune = pd.read_csv(fortune_path)
     col = [c for c in fortune.columns if "COMPANY" in c.upper()][0]
     fortune["Employer_std"] = fortune[col].astype(str).str.upper().str.strip()
-    print("✅ Loaded Fortune 500 dataset.")
+    print("Loaded Fortune 500 dataset.")
 
     # OPT dataset
     if os.path.exists(opt_path):
         opt = pd.read_csv(opt_path)
         if "Employer_std" not in opt.columns and "Employer" in opt.columns:
-            opt["Employer_std"] = opt["Employer"].astype(str)
+            opt["Employer_std"] = opt["Employer"]
         opt["Employer_std"] = opt["Employer_std"].astype(str).str.upper().str.strip()
-        print("✅ Loaded OPT dataset from local cache.")
+        print("Loaded OPT dataset from local cache.")
     elif get_opt_companies:
-        print("🕓 Scraping OPT data for the first time...")
+        print("Scraping OPT data for the first time...")
         opt = get_opt_companies()
         opt["Employer_std"] = opt["Employer"].astype(str).str.upper().str.strip()
         opt.to_csv(opt_path, index=False)
-        print("✅ OPT data saved to cache.")
+        print("OPT data saved to cache.")
     else:
         opt = pd.DataFrame(columns=["Employer_std"])
 
@@ -141,13 +155,13 @@ def integrate_employers(
         if "CPT Friendly" in cpt.columns:
             cpt["CPT Friendly"] = cpt["CPT Friendly"].apply(lambda x: str(x).strip() == "✓")
             cpt = cpt[cpt["CPT Friendly"]]
-        print("✅ Loaded CPT dataset from local cache.")
+        print("Loaded CPT dataset from local cache.")
     elif get_cpt_companies:
-        print("🕓 Scraping CPT data for the first time...")
+        print("Scraping CPT data for the first time...")
         cpt = get_cpt_companies()
         cpt["Employer_std"] = cpt["Employer"].astype(str).str.upper().str.strip()
         cpt.to_csv(cpt_path, index=False)
-        print("✅ CPT data saved to cache.")
+        print("CPT data saved to cache.")
     else:
         cpt = pd.DataFrame(columns=["Employer_std"])
 
@@ -158,7 +172,7 @@ def integrate_employers(
     df["CPT_friendly"] = df["Employer_std"].isin(cpt["Employer_std"])
     df["Flexibility_Index"] = df[["OPT_friendly", "CPT_friendly"]].sum(axis=1)
 
-    print(f"✅ Employer integration completed. Total records: {len(df):,}")
+    print(f"Employer integration completed. Total records: {len(df):,}")
     return df
 
 
@@ -166,10 +180,9 @@ def integrate_employers(
 # 4. Exploratory Data Analysis (save plots to /eda)
 # ----------------------------------------------------------------------
 def eda(df, output_dir="eda"):
-    """Generate and save exploratory plots."""
+    """Generate and save basic exploratory plots."""
     os.makedirs(output_dir, exist_ok=True)
 
-    # Trend of approvals
     trend = df.groupby("Year")["Total_Approvals"].sum().reset_index()
     plt.figure(figsize=(9, 5))
     sns.lineplot(data=trend, x="Year", y="Total_Approvals", marker="o")
@@ -178,7 +191,6 @@ def eda(df, output_dir="eda"):
     plt.savefig(os.path.join(output_dir, "h1b_approvals_trend.png"))
     plt.close()
 
-    # Approvals by Fortune500 vs non-Fortune500
     comp = df.groupby("Fortune500")["Total_Approvals"].sum().reset_index()
     plt.figure(figsize=(6, 4))
     sns.barplot(data=comp, x="Fortune500", y="Total_Approvals")
@@ -187,7 +199,7 @@ def eda(df, output_dir="eda"):
     plt.savefig(os.path.join(output_dir, "fortune500_comparison.png"))
     plt.close()
 
-    print(f"📊 EDA plots saved to: {output_dir}/")
+    print(f"EDA plots saved to: {output_dir}/")
 
 
 # ----------------------------------------------------------------------
@@ -210,6 +222,6 @@ if __name__ == "__main__":
     output_path = os.path.join("data", "clean_h1b_data.csv")
     df.to_csv(output_path, index=False)
 
-    print(f"✅ Dataset successfully saved to: {output_path}")
-    print(f"✅ Total records: {len(df):,}")
+    print(f"Dataset successfully saved to: {output_path}")
+    print(f"Total records: {len(df):,}")
     print("=== Data preparation pipeline completed successfully ===")
