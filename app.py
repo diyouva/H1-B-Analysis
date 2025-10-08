@@ -32,7 +32,13 @@ df = load_data()
 # ==============================================================
 # INTRODUCTION
 # ==============================================================
-st.title("Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock")
+st.markdown(
+    """
+    <h1 style="text-align: center;">Modeling Post-Study Work Pathways</h1>
+    <h3 style="text-align: center;">H-1B, OPT, and CPT under Policy Shock</h3>
+    """,
+    unsafe_allow_html=True
+)
 
 st.markdown("""
 ### Introduction
