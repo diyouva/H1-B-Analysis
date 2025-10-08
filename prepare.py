@@ -8,12 +8,12 @@ Author: Diyouva C. Novith
 Carnegie Mellon University, Heinz College of Information Systems and Public Policy
 
 Purpose:
-1. Load and standardize official USCIS H-1B DataHub files (2015–2023).
-2. Integrate scraped or cached datasets for OPT- and CPT-friendly employers.
-3. Produce a unified, analysis-ready dataset (clean_h1b_data.csv) for simulation and visualization.
+1. Load and standardize USCIS H-1B DataHub files (2015–2023).
+2. Integrate Fortune500, OPT-, and CPT-friendly employer datasets.
+3. Generate basic EDA charts.
+4. Save cleaned dataset to /data and EDA plots to /eda.
 
-This script reflects the empirical integration step described in the paper and policy brief,
-creating a transparent link between the data sources and subsequent simulation analysis.
+Folders created automatically if missing.
 """
 
 import os
@@ -22,7 +22,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from glob import glob
 
-# Optional scraping utilities (only used if local caches do not exist)
+# Optional scrapers (only used if local cache missing)
 try:
     from opt_company import get_opt_companies
 except ImportError:
@@ -38,34 +38,31 @@ except ImportError:
 # 1. Helper — Detect Employer Column
 # ----------------------------------------------------------------------
 def detect_employer_column(df):
-    """Identify which column name represents the employer field."""
+    """Detect which column represents the employer name."""
     for name in ["Employer", "Employer Name", "EMPLOYER_NAME", "EMPLOYER"]:
         if name in df.columns:
             return name
-    raise ValueError("Employer column not found in H-1B dataset.")
+    raise ValueError("Employer column not found in H1B dataset.")
 
 
 # ----------------------------------------------------------------------
 # 2. Load and Clean H-1B Datasets
 # ----------------------------------------------------------------------
 def load_and_clean(data_dir="data"):
-    """
-    Load all yearly H-1B CSV files (2015–2023), standardize headers,
-    and calculate total approvals, denials, and applications.
-    """
+    """Load yearly H-1B CSV files, standardize columns, and compute totals."""
     all_files = sorted(glob(os.path.join(data_dir, "h1b_datahubexport-*.csv")))
-    dfs = []
+    if not all_files:
+        raise FileNotFoundError(f"No H-1B files found in {data_dir}/")
 
+    dfs = []
     for f in all_files:
         year = int(os.path.basename(f).split("-")[-1].split(".")[0])
         df = pd.read_csv(f)
         df.columns = df.columns.str.strip().str.replace(" ", "_")
 
-        # Detect and rename employer column
         emp_col = detect_employer_column(df)
         df.rename(columns={emp_col: "Employer"}, inplace=True)
 
-        # Normalize numeric fields
         for col in ["Initial_Approval", "Continuing_Approval",
                     "Initial_Denial", "Continuing_Denial"]:
             match = [c for c in df.columns if col.lower().replace("_", " ") in c.lower()]
@@ -74,7 +71,6 @@ def load_and_clean(data_dir="data"):
             else:
                 df[col] = 0
 
-        # Derived variables
         df["Total_Approvals"] = df["Initial_Approval"] + df["Continuing_Approval"]
         df["Total_Denials"] = df["Initial_Denial"] + df["Continuing_Denial"]
         df["Total_Applications"] = df["Total_Approvals"] + df["Total_Denials"]
@@ -82,23 +78,19 @@ def load_and_clean(data_dir="data"):
         dfs.append(df)
 
     df_all = pd.concat(dfs, ignore_index=True)
-    print(f"Loaded {len(df_all):,} total H-1B records across {len(all_files)} years.")
+    print(f"Loaded {len(df_all):,} total H-1B records from {len(all_files)} files.")
     return df_all
 
 
 # ----------------------------------------------------------------------
-# 3. Integrate Employer Datasets (Fortune500, OPT, CPT)
+# 3. Integrate Employer Datasets
 # ----------------------------------------------------------------------
 def integrate_employers(df,
                         fortune_path="data/fortune500_opt_companies_2024.csv",
                         opt_path="data/opt_employers_scraped.csv",
                         cpt_path="data/cpt_employers_day1cptuniversities_bs4.csv"):
-    """
-    Merge H-1B data with Fortune500, OPT, and CPT employer datasets.
-    If local CSV files exist, they are used; otherwise, the script scrapes once and caches the results.
-    """
-
-    # Fortune 500 dataset
+    """Merge H-1B data with Fortune500, OPT, and CPT datasets."""
+    # Fortune 500
     fortune = pd.read_csv(fortune_path)
     fortune["Employer_std"] = fortune["COMPANY NAME"].str.upper().str.strip()
     print("Loaded Fortune 500 dataset.")
@@ -113,7 +105,7 @@ def integrate_employers(df,
         opt = get_opt_companies()
         opt["Employer_std"] = opt["Employer"].str.upper().str.strip()
         opt.to_csv(opt_path, index=False)
-        print("OPT data saved for future runs.")
+        print("OPT data saved to local cache.")
     else:
         opt = pd.DataFrame(columns=["Employer_std"])
 
@@ -130,41 +122,69 @@ def integrate_employers(df,
         cpt = get_cpt_companies()
         cpt["Employer_std"] = cpt["Employer"].str.upper().str.strip()
         cpt.to_csv(cpt_path, index=False)
-        print("CPT data saved for future runs.")
+        print("CPT data saved to local cache.")
     else:
         cpt = pd.DataFrame(columns=["Employer_std"])
 
-    # Merge standardization
+    # Merge and standardize
     df["Employer_std"] = df["Employer"].str.upper().str.strip()
     df["Fortune500"] = df["Employer_std"].isin(fortune["Employer_std"])
     df["OPT_friendly"] = df["Employer_std"].isin(opt["Employer_std"])
     df["CPT_friendly"] = df["Employer_std"].isin(cpt["Employer_std"])
     df["Flexibility_Index"] = df[["OPT_friendly", "CPT_friendly"]].sum(axis=1)
 
-    print(f"Integration complete: {len(df):,} employer observations processed.")
+    print(f"Integrated employer datasets: {len(df):,} total records.")
     return df
 
 
 # ----------------------------------------------------------------------
-# 4. Exploratory Data Analysis (EDA)
+# 4. Exploratory Data Analysis (save plots to /eda)
 # ----------------------------------------------------------------------
-def eda(df):
-    """Generate simple EDA charts illustrating temporal trends."""
+def eda(df, output_dir="eda"):
+    """Generate and save basic exploratory plots."""
+    os.makedirs(output_dir, exist_ok=True)
+
+    # Trend of approvals
+    trend = df.groupby("Year")["Total_Approvals"].sum().reset_index()
     plt.figure(figsize=(9, 5))
-    sns.lineplot(data=df.groupby("Year")["Total_Approvals"].sum().reset_index(),
-                 x="Year", y="Total_Approvals", marker="o")
+    sns.lineplot(data=trend, x="Year", y="Total_Approvals", marker="o")
     plt.title("H-1B Approvals by Year")
     plt.tight_layout()
-    plt.savefig("eda_trend.png")
-    print("Saved trend plot as eda_trend.png.")
+    plt.savefig(os.path.join(output_dir, "h1b_approvals_trend.png"))
+    plt.close()
+
+    # Approvals by Fortune500 vs non-Fortune500
+    comp = df.groupby("Fortune500")["Total_Approvals"].sum().reset_index()
+    plt.figure(figsize=(6, 4))
+    sns.barplot(data=comp, x="Fortune500", y="Total_Approvals")
+    plt.title("Fortune 500 vs Non-Fortune 500 Approvals")
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_dir, "fortune500_comparison.png"))
+    plt.close()
+
+    print(f"EDA plots saved in: {output_dir}/")
 
 
 # ----------------------------------------------------------------------
 # 5. Main Execution
 # ----------------------------------------------------------------------
 if __name__ == "__main__":
+    print("=== Starting Data Preparation for H-1B / OPT / CPT Integration ===")
+
+    # Step 1 — Load raw H-1B datasets
     df = load_and_clean("data")
+
+    # Step 2 — Integrate Fortune500, OPT, CPT employer datasets
     df = integrate_employers(df)
-    eda(df)
-    df.to_csv("clean_h1b_data.csv", index=False)
-    print("clean_h1b_data.csv successfully saved.")
+
+    # Step 3 — Run exploratory data analysis and save plots
+    eda(df, output_dir="eda")
+
+    # Step 4 — Save cleaned dataset to /data
+    os.makedirs("data", exist_ok=True)
+    output_path = os.path.join("data", "clean_h1b_data.csv")
+    df.to_csv(output_path, index=False)
+
+    print(f"Dataset successfully saved to: {output_path}")
+    print(f"Total records: {len(df):,}")
+    print("=== Data preparation pipeline completed successfully ===")
