@@ -23,7 +23,9 @@ st.set_page_config(page_title="H-1B / OPT / CPT Policy Simulation", layout="wide
 
 @st.cache_data
 def load_data():
-    return pd.read_csv("clean_h1b_data.csv")
+    return pd.read_csv("data/clean_h1b_data.csv")
+
+df = load_data()
 
 df = load_data()
 
