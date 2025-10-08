@@ -66,66 +66,103 @@ tab1, tab2, tab3 = st.tabs(["1️⃣ Data & Methodology", "2️⃣ Simulation & 
 with tab1:
     st.header("1. Data and Methodology")
 
+    # --- Data Sources ---
     st.markdown("""
     ### Data Sources
     This study combines **three complementary datasets** to represent both the *formal* and *adaptive* sides of post-study employment:
+
     1. **USCIS H-1B DataHub (2015–2023)** – official records of approvals and denials for H-1B petitions.  
     2. **Fortune 500 OPT Employers (2024)** – companies employing international students through OPT.  
     3. **CPT-Friendly Employers (Day-1 CPT list)** – organizations known to hire students under CPT authorization.  
 
-    These sources were harmonized in `prepare.py`, where employer names were standardized,
-    numeric columns validated, and category flags (`Fortune500`, `OPT_friendly`, `CPT_friendly`)
-    created to indicate each firm’s participation across pathways.
+    These datasets were harmonized in `prepare.py` through a standardized workflow: employer names were normalized
+    to uppercase and stripped of extra spaces; numeric fields were validated and coerced into numeric types;
+    and categorical flags (`Fortune500`, `OPT_friendly`, `CPT_friendly`) were generated to indicate
+    each employer’s participation across pathways.
     """)
 
+    # --- Methodological Framework ---
     st.markdown("""
     ### Methodological Framework
     1. **Integration:** Combine all sources to map employer participation across H-1B, OPT, and CPT.  
-    2. **Elasticity Modeling:** Apply an economic elasticity approach to simulate how fee changes
-       affect application volumes.  
-    3. **Visualization:** Use Streamlit and Plotly to interpret results dynamically and transparently.
+    2. **Elasticity Modeling:** Apply an economic-elasticity approach to simulate how fee changes affect application volumes.  
+    3. **Visualization:** Use Streamlit and Plotly to interpret results dynamically and transparently.  
 
-    This mirrors the *open-source analytics* principle in the policy brief:
-    a transparent framework to anticipate ripple effects and inform evidence-based reform.
+    This mirrors the *open-source analytics* principle described in the policy brief—creating a transparent,
+    reproducible framework to anticipate ripple effects and inform evidence-based reform.
     """)
 
+    # --- Descriptive Baseline ---
     st.markdown("### Descriptive Baseline of H-1B Activity (2015–2023)")
     yearly = df.groupby("Year")[["Total_Approvals", "Total_Denials"]].sum().reset_index()
-    fig1 = px.line(yearly, x="Year", y=["Total_Approvals", "Total_Denials"], markers=True,
-                   labels={"value": "Applications", "variable": "Type"},
-                   title="H-1B Approvals and Denials by Year")
+
+    fig1 = px.line(
+        yearly, x="Year", y=["Total_Approvals", "Total_Denials"],
+        markers=True, line_shape="linear",
+        color_discrete_map={
+            "Total_Approvals": "#4DB6AC",   # teal
+            "Total_Denials": "#FF6F61"      # coral
+        },
+        labels={"value": "Applications", "variable": "Category"},
+        title="H-1B Approvals and Denials by Year"
+    )
+    fig1.update_layout(template="plotly_dark", legend_title_text="Type")
     st.plotly_chart(fig1, use_container_width=True)
 
     st.markdown("""
     **Interpretation:**  
-    H-1B approvals fluctuate, but overall demand remains high across the decade—evidence of
-    persistent employer dependence on foreign talent, even amid policy uncertainty.
+    H-1B approvals fluctuate annually, but overall demand remains high—evidence of persistent employer dependence
+    on foreign talent even amid policy uncertainty.
     """)
 
+    # --- Top Employers ---
     st.subheader("Top Sponsoring Employers (All Years)")
-    top_emp = df.groupby("Employer")[["Total_Approvals"]].sum().nlargest(10, "Total_Approvals").reset_index()
-    fig2 = px.bar(top_emp, x="Employer", y="Total_Approvals",
-                  title="Top 10 H-1B Sponsors (2015–2023)",
-                  labels={"Total_Approvals": "Total Approvals"}, text_auto=True)
+    top_emp = (
+        df.groupby("Employer")[["Total_Approvals"]]
+        .sum()
+        .nlargest(10, "Total_Approvals")
+        .reset_index()
+    )
+    fig2 = px.bar(
+        top_emp, x="Employer", y="Total_Approvals",
+        text_auto=True,
+        title="Top 10 H-1B Sponsors (2015–2023)",
+        labels={"Total_Approvals": "Total Approvals"}
+    )
+    fig2.update_layout(xaxis_tickangle=-45, template="plotly_dark")
     st.plotly_chart(fig2, use_container_width=True)
 
     st.markdown("""
     **Observation:**  
-    The dominance of technology, finance, and consulting firms confirms the sectoral pattern
-    highlighted in the policy paper: these industries are most exposed to cost shocks.
+    Technology, finance, and consulting firms dominate H-1B sponsorship, confirming the sectoral pattern highlighted
+    in the policy paper—these industries are most exposed to potential fee shocks.
     """)
 
-    st.subheader("Employer Overlap across Pathways")
+    # --- Employer Overlap ---
+    st.subheader("Employer Overlap Across Pathways")
     cat_summary = df.groupby("Year")[["Fortune500", "OPT_friendly", "CPT_friendly"]].sum().reset_index()
-    fig3 = px.line(cat_summary, x="Year",
-                   y=["Fortune500", "OPT_friendly", "CPT_friendly"],
-                   markers=True, title="Employer Category Overlap: Fortune 500 / OPT / CPT")
+
+    # Optional normalization to percent of total employers per year
+    employers_per_year = df.groupby("Year")["Employer_std"].nunique().reset_index(name="Total_Employers")
+    cat_summary = cat_summary.merge(employers_per_year, on="Year", how="left")
+    for col in ["Fortune500", "OPT_friendly", "CPT_friendly"]:
+        cat_summary[col] = (cat_summary[col] / cat_summary["Total_Employers"]) * 100
+
+    fig3 = px.line(
+        cat_summary, x="Year",
+        y=["Fortune500", "OPT_friendly", "CPT_friendly"],
+        markers=True,
+        labels={"value": "Share of Employers (%)", "variable": "Category"},
+        title="Share of Employers by Category (%) – Fortune 500 / OPT / CPT"
+    )
+    fig3.update_layout(template="plotly_dark", legend_title_text="Category")
     st.plotly_chart(fig3, use_container_width=True)
 
     st.markdown("""
     **Interpretation:**  
-    Firms that appear across multiple lists demonstrate *flexibility*—the ability to sustain hiring
-    through alternative channels (OPT/CPT) when H-1B sponsorship becomes costly.
+    Firms appearing across multiple categories demonstrate *flexibility*—the ability to sustain hiring through OPT or CPT
+    pathways when H-1B sponsorship becomes costly. The increasing share of overlapping employers over time suggests
+    adaptation to policy and market shifts rather than a reduction in international talent demand.
     """)
 
 # ==============================================================
@@ -140,14 +177,12 @@ with tab2:
     Employers react to higher sponsorship fees by reducing the number of applications they submit.
 
     #### Baseline Fee Assumption
-    The **baseline total cost** of sponsoring an H-1B worker (government fees + legal + compliance costs)  
-    is assumed to be **USD 25 000** per worker.  
+    The **baseline total cost** of sponsoring an H-1B worker (government fees + legal + compliance costs) is assumed to be **USD 25 000** per worker.  
     This estimate comes from:
     - USCIS filing fees (≈ USD 6 000–10 000 for large employers)
     - Attorney and administrative costs (≈ USD 10 000–15 000)
     
-    Therefore, a policy that raises the effective fee to **USD 100 000** represents a **+300 %** cost increase  
-    relative to the baseline.
+    Therefore, a policy that raises the effective fee to **USD 100 000** represents a **+300 %** cost increase relative to the baseline.
 
     The elasticity parameter (ε) represents how responsive employers are to cost changes:
     - A value of –0.3 means a 1 % increase in cost reduces applications by 0.3 %.
@@ -232,12 +267,9 @@ with tab3:
 
     st.markdown("""
     ### Policy Recommendations
-    1. **Tiered H-1B Fee Structure:** Calibrate fees by employer size or wage level  
-       so smaller firms remain competitive while large firms contribute proportionally more.  
-    2. **Extend STEM-OPT Duration:** Expanding from 36 to 48 months would help graduates  
-       maintain employment continuity across multiple visa cycles.  
-    3. **Expand Cap-Exempt Categories:** Include universities, nonprofits,  
-       and research institutions to safeguard innovation pipelines.  
+    1. **Tiered H-1B Fee Structure:** Calibrate fees by employer size or wage level so smaller firms remain competitive while large firms contribute proportionally more.  
+    2. **Extend STEM-OPT Duration:** Expanding from 36 to 48 months would help graduates maintain employment continuity across multiple visa cycles.  
+    3. **Expand Cap-Exempt Categories:** Include universities, nonprofits, and research institutions to safeguard innovation pipelines.  
     """)
 
     st.markdown(f"""
