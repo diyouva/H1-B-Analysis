@@ -7,17 +7,17 @@ textColor = "#FAFAFA"
 font = "sans serif"
 
 [server]
-headless = true
+headless = false
 enableCORS = false
 enableXsrfProtection = false
 port = 8501
 
+[client]
+showSidebarNavigation = true
+toolbarMode = "minimal"
+
 [ui]
 hideTopBar = false
-hideSidebarNav = false
-
-[client]
-toolbarMode = "minimal"
 
 [runner]
 fastReruns = true
