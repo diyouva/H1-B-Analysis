@@ -136,19 +136,35 @@ with tab2:
 
     st.markdown("""
     ### Analytical Model
-    The simulation assumes that employer demand for H-1B sponsorship is **elastic** with respect to cost.  
-    Using elasticity (ε = –0.3) and fee change (α), the model projects how total applications and approvals
-    respond to the new cost environment.
+    The simulation assumes that employer demand for H-1B sponsorship is **elastic** with respect to total cost.  
+    Employers react to higher sponsorship fees by reducing the number of applications they submit.
 
-    Employers with access to both OPT and CPT programs are modeled as more resilient,
-    reflecting their *Flexibility Index*.
+    #### Baseline Fee Assumption
+    The **baseline total cost** of sponsoring an H-1B worker (government fees + legal + compliance costs)  
+    is assumed to be **USD 25 000** per worker.  
+    This estimate comes from:
+    - USCIS filing fees (≈ USD 6 000–10 000 for large employers)
+    - Attorney and administrative costs (≈ USD 10 000–15 000)
+    
+    Therefore, a policy that raises the effective fee to **USD 100 000** represents a **+300 %** cost increase  
+    relative to the baseline.
+
+    The elasticity parameter (ε) represents how responsive employers are to cost changes:
+    - A value of –0.3 means a 1 % increase in cost reduces applications by 0.3 %.
+    - Elasticity can vary by industry and firm size.
     """)
 
-    alpha = st.slider("Fee Change (%)", -50, 50, 0, step=5) / 100
+    # User inputs
+    baseline_fee = 25_000
+    fee_usd = st.slider("Set total H-1B sponsorship cost (USD)", 5_000, 100_000, 25_000, step=5_000)
     elasticity = st.slider("Elasticity (Responsiveness)", -1.0, 0.0, -0.3, step=0.05)
+    st.caption(f"Elasticity interpretation: For every 1% increase in cost, applications change by {elasticity}%")
+
+    # Compute percent change relative to baseline
+    alpha = (fee_usd - baseline_fee) / baseline_fee
     sim = simulate_fee_change(df, alpha=alpha, elasticity=elasticity)
 
-    st.markdown(f"**Simulation Parameters:** Fee change = {alpha*100:.1f}% | Elasticity = {elasticity}")
+    st.markdown(f"**Simulation Parameters:** Baseline = ${baseline_fee:,} | New Fee = ${fee_usd:,} | Fee Change = {alpha*100:.1f}% | Elasticity = {elasticity}")
     st.dataframe(sim)
 
     if "Year" in sim.columns:
@@ -157,61 +173,90 @@ with tab2:
                          labels={"Change_%": "Change (%)", "Flexibility_Index": "Flexibility Index"})
         st.plotly_chart(fig_sim, use_container_width=True)
 
-    st.markdown("""
+    # ----------------------------------------------------------
+    # INTERPRETIVE FINDINGS
+    # ----------------------------------------------------------
+    projected_change = elasticity * alpha * 100
+    st.markdown(f"""
     ### Key Findings
-    - A USD 100 000 fee (≈ +300 %) could reduce H-1B applications by roughly **20 %**.  
-    - Employers with high flexibility—those using both OPT and CPT—offset losses by shifting workers
-      into temporary authorizations.  
-    - The most adaptive sectors are **technology, finance, and consulting**.
+    - Increasing the effective H-1B cost to **USD {fee_usd:,}** (≈ {alpha*100:.0f} %) is projected to reduce H-1B applications by roughly **{abs(projected_change):.1f} %**, assuming elasticity = {elasticity}.
+    - Employers with high flexibility—those using both OPT and CPT—are better able to adapt, shifting foreign graduates into temporary authorizations instead of filing new H-1B petitions.
+    - The most adaptive sectors remain **technology, finance, and consulting**, where firms have broader visa portfolios and remote-work options.
 
-    These results mirror the empirical insights from the policy brief,
-    demonstrating that high fees reorganize employment channels rather than eliminating demand.
+    These simulations show that while extreme fee increases (e.g., USD 100 000) could shrink overall H-1B demand substantially, the policy effect is uneven across sectors and
+    may redirect skilled labor flows rather than eliminate them.
     """)
 
+    st.session_state.fee_usd = fee_usd
+    st.session_state.elasticity = elasticity
+    
 # ==============================================================
-# TAB 3 – POLICY DISCUSSION & CONCLUSION
+# TAB 3 – POLICY DISCUSSION & CONCLUSION (Dynamic Version)
 # ==============================================================
 with tab3:
     st.header("3. Policy Discussion and Conclusion")
 
-    st.markdown("""
-    ### Policy Interpretation
-    The simulation highlights a crucial insight:
-    raising H-1B costs would **redistribute** employment across visa categories
-    rather than reduce the total pool of skilled foreign labor.
+    # --- retrieve dynamic parameters from Tab 2 context ---
+    # fee_usd, baseline_fee, and elasticity must be defined globally or via session_state
+    baseline_fee = 25_000
+    fee_usd = st.session_state.get("fee_usd", 25_000)
+    elasticity = st.session_state.get("elasticity", -0.3)
+    alpha = (fee_usd - baseline_fee) / baseline_fee
+    projected_change = elasticity * alpha * 100
 
-    Firms that bridge OPT and CPT demonstrate systemic resilience,
-    acting as “shock absorbers” that preserve workforce continuity
-    even when formal sponsorship declines.
+    # --- determine qualitative tone for policy interpretation ---
+    if abs(projected_change) < 10:
+        tone = "a mild, largely manageable adjustment"
+        effect = "modest"
+    elif abs(projected_change) < 40:
+        tone = "a noticeable contraction in H-1B sponsorship, especially among smaller employers"
+        effect = "moderate"
+    else:
+        tone = "a severe contraction in formal H-1B sponsorship that could reshape employer behavior"
+        effect = "strong"
+
+    # --- narrative text dynamically constructed ---
+    st.markdown(f"""
+    ### Policy Interpretation
+    The simulation projects that increasing the total H-1B cost to **USD {fee_usd:,}**
+    (≈ {alpha*100:.0f}% above baseline) would produce roughly a **{abs(projected_change):.1f}%**
+    reduction in applications, given elasticity = {elasticity}.  
+    This represents {tone}.
+
+    Firms with access to **OPT** and **CPT** channels may partially offset this effect
+    by reallocating international graduates to temporary work authorizations.
+    The result is a redistribution of skilled labor across visa categories rather than a full collapse.
+    However, at very high fee levels (e.g., ≥ USD 75 000),
+    even flexible sectors begin cutting sponsorship substantially.
     """)
 
     st.markdown("""
     ### Policy Recommendations
-    1. **Tiered H-1B Fee Structure:** Adjust fees by employer size or wage level
-       to keep small firms competitive.  
-    2. **Extend STEM-OPT Duration:** Expanding from 36 to 48 months allows graduates
-       to remain employed through multiple visa cycles.  
-    3. **Expand Cap-Exempt Categories:** Include universities, nonprofits,
-       and research institutions to protect innovation continuity.  
+    1. **Tiered H-1B Fee Structure:** Calibrate fees by employer size or wage level  
+       so smaller firms remain competitive while large firms contribute proportionally more.  
+    2. **Extend STEM-OPT Duration:** Expanding from 36 to 48 months would help graduates  
+       maintain employment continuity across multiple visa cycles.  
+    3. **Expand Cap-Exempt Categories:** Include universities, nonprofits,  
+       and research institutions to safeguard innovation pipelines.  
     """)
 
-    st.markdown("""
+    st.markdown(f"""
     ### Broader Implications
-    The interplay among H-1B, OPT, and CPT should be viewed as a **dynamic system**:
-    changing one policy variable reverberates through the others,
-    affecting employer strategies and student outcomes.
-    Evidence from this integrated dataset supports balanced reforms
-    that align fiscal goals with sustainable talent mobility.
+    The H-1B, OPT, and CPT programs form a **dynamic ecosystem**.
+    Shocks in one component ripple through the others, influencing employer strategy,
+    compliance costs, and student career trajectories.  
+    Under the current simulation, the system demonstrates **{effect} substitution dynamics**—
+    some employers adapt, but overall access to foreign talent tightens as costs rise.
     """)
 
     st.markdown("""
     ---
     ### Conclusion
-    This project demonstrates that:
-    > **Openness to international talent, combined with prudent program management,
-    remains essential to U.S. innovation and long-term economic growth.**
+    This project underscores that:
+    > **Openness to international talent, paired with evidence-based fee design,  
+    remains essential to sustaining U.S. innovation and long-term growth.**
 
-    By combining empirical data, elasticity modeling, and open-source analytics,
-    this dashboard provides a transparent, reproducible framework
-    to anticipate policy ripple effects and inform evidence-based decision-making.
+    Integrating empirical data, elasticity modeling, and open-source analytics,
+    this dashboard offers a transparent and reproducible framework
+    for anticipating policy ripple effects and guiding data-driven reform.
     """)
