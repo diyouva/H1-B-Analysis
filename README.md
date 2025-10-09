@@ -165,12 +165,12 @@ Understanding this interaction is key to sustaining U.S. innovation and global c
 
 ## 🧾 Citation
 
-> **Novith, Diyouva C.** (2024). *Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock.*  
+> **Novith, Diyouva C.** (2025). *Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock.*  
 > Carnegie Mellon University, Heinz College of Information Systems and Public Policy.
 
 APA:
 ```
-Novith, D. C. (2024). Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock.  
+Novith, D. C. (2025). Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock.  
 Carnegie Mellon University, Heinz College of Information Systems and Public Policy.
 ```
 
@@ -180,5 +180,4 @@ Carnegie Mellon University, Heinz College of Information Systems and Public Poli
 
 Developed as part of a Final Project for the **Python Programming II – Data Analysis** course at  
 **Carnegie Mellon University – Heinz College of Information Systems and Public Policy**.  
-This project combines empirical data, simulation modeling, and open-source visualization  
-to promote transparent, data-driven policymaking on international talent and immigration issues.
+This project combines empirical data, simulation modeling, and open-source visualization to promote transparent, data-driven policymaking on international talent and immigration issues.
