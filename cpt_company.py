@@ -1,4 +1,3 @@
-# scrape_day1cpt_bs4.py
 import os
 import requests
 from bs4 import BeautifulSoup

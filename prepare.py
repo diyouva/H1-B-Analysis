@@ -1,22 +1,3 @@
-# prepare.py
-"""
-PREPARE.PY
-Data preparation script for:
-"Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock"
-
-Author: Diyouva C. Novith
-Carnegie Mellon University, Heinz College of Information Systems and Public Policy
-
-Purpose:
-1. Load and standardize USCIS H-1B DataHub files (2015–2023).
-2. Integrate Fortune500, OPT-, and CPT-friendly employer datasets.
-3. Clean numeric columns to ensure correct plotting and aggregation.
-4. Generate EDA charts and save them to /eda.
-5. Save the cleaned dataset to /data/clean_h1b_data.csv.
-
-Folders created automatically if missing.
-"""
-
 import os
 import pandas as pd
 import seaborn as sns
