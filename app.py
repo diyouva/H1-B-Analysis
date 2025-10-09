@@ -17,6 +17,7 @@ It transforms the study into an open, interactive format connecting:
 import streamlit as st
 import pandas as pd
 import plotly.express as px
+import plotly.graph_objects as go
 from simulation import simulate_fee_change
 
 st.set_page_config(page_title="H-1B / OPT / CPT Policy Simulation", layout="wide")
@@ -255,14 +256,11 @@ with tab3:
     ### Policy Interpretation
     The simulation projects that increasing the total H-1B cost to **USD {fee_usd:,}**
     (≈ {alpha*100:.0f}% above baseline) would produce roughly a **{abs(projected_change):.1f}%**
-    reduction in applications, given elasticity = {elasticity}.  
-    This represents {tone}.
+    reduction in applications, given elasticity = {elasticity}. This represents {tone}.
 
-    Firms with access to **OPT** and **CPT** channels may partially offset this effect
-    by reallocating international graduates to temporary work authorizations.
+    Firms with access to **OPT** and **CPT** channels may partially offset this effect by reallocating international graduates to temporary work authorizations.
     The result is a redistribution of skilled labor across visa categories rather than a full collapse.
-    However, at very high fee levels (e.g., ≥ USD 75 000),
-    even flexible sectors begin cutting sponsorship substantially.
+    However, at very high fee levels (e.g., ≥ USD 75 000), even flexible sectors begin cutting sponsorship substantially.
     """)
 
     st.markdown("""
@@ -275,9 +273,7 @@ with tab3:
     st.markdown(f"""
     ### Broader Implications
     The H-1B, OPT, and CPT programs form a **dynamic ecosystem**.
-    Shocks in one component ripple through the others, influencing employer strategy,
-    compliance costs, and student career trajectories.  
-    Under the current simulation, the system demonstrates **{effect} substitution dynamics**—
+    Shocks in one component ripple through the others, influencing employer strategy, compliance costs, and student career trajectories. Under the current simulation, the system demonstrates **{effect} substitution dynamics**—
     some employers adapt, but overall access to foreign talent tightens as costs rise.
     """)
 
@@ -285,10 +281,8 @@ with tab3:
     ---
     ### Conclusion
     This project underscores that:
-    > **Openness to international talent, paired with evidence-based fee design,  
-    remains essential to sustaining U.S. innovation and long-term growth.**
+    > **Openness to international talent, paired with evidence-based fee design, remains essential to sustaining U.S. innovation and long-term growth.**
 
     Integrating empirical data, elasticity modeling, and open-source analytics,
-    this dashboard offers a transparent and reproducible framework
-    for anticipating policy ripple effects and guiding data-driven reform.
+    this dashboard offers a transparent and reproducible framework for anticipating policy ripple effects and guiding data-driven reform.
     """)

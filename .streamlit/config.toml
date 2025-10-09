@@ -1,10 +1,10 @@
 [theme]
-base = "dark"
-primaryColor = "#4DB6AC"
-backgroundColor = "#0E1117"
-secondaryBackgroundColor = "#1E252F"
-textColor = "#FAFAFA"
-font = "sans serif"
+base = "light"
+primaryColor = "#c4452f"              # Muted warm red (similar to Anies–Muhaimin red)
+backgroundColor = "#f5f0e8"           # Warm cream background — easy on the eyes, excellent for print
+secondaryBackgroundColor = "#ffffff"  # White for cards and secondary sections
+textColor = "#2b2b2b"                 # Neutral dark gray for excellent readability
+font = "Georgia"                        # Classic serif font for an editorial / map-report feel
 
 [server]
 headless = false
