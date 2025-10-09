@@ -54,11 +54,11 @@ def simulate_fee_change(df, alpha=0.1, elasticity=-0.3):
     return summary
 
 
-# ----------------------------------------------------------------------
-# 2. Stand-alone Execution Example
-# ----------------------------------------------------------------------
-if __name__ == "__main__":
-    df = pd.read_csv("clean_h1b_data.csv")
-    result = simulate_fee_change(df, alpha=0.2, elasticity=-0.3)
-    result.to_csv("simulation_result.csv", index=False)
-    print("simulation_result.csv successfully saved.")
+# # ----------------------------------------------------------------------
+# # 2. Stand-alone Execution Example
+# # ----------------------------------------------------------------------
+# if __name__ == "__main__":
+#     df = pd.read_csv("clean_h1b_data.csv")
+#     result = simulate_fee_change(df, alpha=0.2, elasticity=-0.3)
+#     result.to_csv("simulation_result.csv", index=False)
+#     print("simulation_result.csv successfully saved.")
