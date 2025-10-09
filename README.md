@@ -78,7 +78,7 @@ streamlit run app.py
 You can then:
 - View **H-1B approval and denial trends (2015–2023)**  
 - Explore **top employers** and **sector concentration**  
-- Simulate **employer responses** to fee changes  
+- Simulate **employer responses** to fee changes**  
 - Review **policy impacts** based on adaptability across visa types  
 
 ---
@@ -102,6 +102,19 @@ where:
 
 With a baseline cost of **USD 25 000**, raising fees to **USD 100 000** represents a **+300 %** increase.  
 At ε = −0.3, the model projects an approximate **90 % decline** in H-1B applications.
+
+---
+
+## 🗃️ Analytical Outputs
+
+The project produces two key summary files for reproducibility and further analysis:
+
+| File | Description |
+|------|--------------|
+| [`data/summary_overall.csv`](./data/summary_overall.csv) | Year-by-year totals of H-1B approvals and denials (2015–2023), plus projected percentage change in applications under the USD 100 000 scenario. Used in Tab 1 (“Descriptive Baseline”) and Tab 2 (“Simulation”). |
+| [`data/sector_summary.csv`](./data/sector_summary.csv) | Employer-level aggregation by sector (Technology, Finance, Consulting, etc.) showing total approvals, Fortune 500 participation, OPT/CPT friendliness, and flexibility index averages. Used in Tab 2 (“Sector Comparison”). |
+
+These outputs allow transparent validation of all simulation and visualization results.
 
 ---
 
