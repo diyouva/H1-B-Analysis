@@ -1,28 +1,3 @@
-"""
-# app.py
-
-Interactive Research Dashboard for:
-**"Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock"**
-
-Author: **Diyouva C. Novith**  
-Carnegie Mellon University – Heinz College of Information Systems and Public Policy
-
----
-
-### Overview
-This Streamlit app operationalizes the full workflow from the accompanying policy brief:
-- Integrates official **USCIS H-1B data (2015–2023)** with employer lists for **OPT** and **CPT**
-- Simulates the impact of a **USD 100 000 H-1B fee shock** using elasticity modeling
-- Analyzes **sector-level adaptability** based on NAICS industry codes and employer flexibility indices
-
-The dashboard connects three analytical components:
-1. **Data Integration** – implemented in `prepare.py`  
-2. **Elasticity Simulation** – implemented in `simulation.py`  
-3. **Sector & Policy Interpretation** – implemented here in `app.py`
-
-This app embodies the principle of **open, reproducible research**, enabling users to interactively explore how U.S. post-study work pathways might adapt to major policy shifts.
-"""
-
 # ==============================================================
 # Imports and configuration
 # ==============================================================
