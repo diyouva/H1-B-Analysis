@@ -44,9 +44,9 @@ df = load_data()
 # ==============================================================
 st.markdown(
     """
-    <div style="text-align:center; line-height:1;">
-        <h1 style="margin-bottom:0px; font-size:40px;">Modeling Post-Study Work Pathways</h1>
-        <h3 style="margin-top:-10px; font-size:20px; font-style:italic; font-weight:normal;">
+    <div style="text-align:center;">
+        <h1 style="margin-bottom:-5px; font-size:40px;">Modeling Post-Study Work Pathways</h1>
+        <h3 style="margin-top:-15px; font-size:23px; font-style:italic; font-weight:normal;">
             H-1B, OPT, and CPT under Policy Shock
         </h3>
         <p style="margin-top:-2px; font-size:16px; line-height:1.2;">
@@ -74,9 +74,6 @@ tab1, tab2, tab3 = st.tabs(
     ["1️⃣ Data & Findings", "2️⃣ Simulation & Results", "3️⃣ Policy Discussion & Conclusion"]
 )
 
-# ==============================================================
-# TAB 1 – DATA & METHODOLOGY
-# ==============================================================
 # ==============================================================
 # TAB 1 – DATA & METHODOLOGY
 # ==============================================================
@@ -349,6 +346,7 @@ with tab3:
     whereas **Consulting** continues to dominate sponsorship volume but faces greater structural constraints.
     Policymakers should recognize that openness to international talent and the flexibility of post-study employment programs
     are complementary drivers of U.S. competitiveness.  
+    
     Data-driven calibration of visa fees and program durations, coupled with transparency across employment pathways,
     is essential to preserving both economic dynamism and equitable access to skilled labor opportunities.
     """)
