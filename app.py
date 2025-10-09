@@ -20,8 +20,7 @@ The dashboard connects three analytical components:
 2. **Elasticity Simulation** – implemented in `simulation.py`  
 3. **Sector & Policy Interpretation** – implemented here in `app.py`
 
-This app embodies the principle of **open, reproducible research**, enabling users to
-interactively explore how U.S. post-study work pathways might adapt to major policy shifts.
+This app embodies the principle of **open, reproducible research**, enabling users to interactively explore how U.S. post-study work pathways might adapt to major policy shifts.
 """
 
 # ==============================================================
@@ -45,66 +44,75 @@ df = load_data()
 # ==============================================================
 st.markdown(
     """
-    <h1 style="text-align:center;">Modeling Post-Study Work Pathways</h1>
-    <h3 style="text-align:center;">H-1B, OPT, and CPT under Policy Shock</h3>
+    <div style="text-align:center; line-height:1;">
+        <h1 style="margin-bottom:0px; font-size:40px;">Modeling Post-Study Work Pathways</h1>
+        <h3 style="margin-top:-10px; font-size:20px; font-style:italic; font-weight:normal;">
+            H-1B, OPT, and CPT under Policy Shock
+        </h3>
+        <p style="margin-top:-2px; font-size:16px; line-height:1.2;">
+            <strong>Diyouva C. Novith</strong><br>
+            <em>Carnegie Mellon University – Heinz College of Information Systems and Public Policy</em>
+        </p>
+    </div>
     """,
     unsafe_allow_html=True,
 )
 
 st.markdown("""
 ### Introduction
-International students are central to U.S. innovation and competitiveness.  
-They fill critical roles in **technology, finance, and research**, linking higher education to the labor market
-through **three interconnected programs**:
 
-- **H-1B visa** – formal employer sponsorship for skilled workers.  
-- **OPT (Optional Practical Training)** – temporary authorization for graduates to gain work experience.  
-- **CPT (Curricular Practical Training)** – employment authorization integrated with academic study.
+International students play an indispensable role in sustaining the United States’ innovation capacity and global competitiveness. They contribute disproportionately to sectors such as **technology, finance, and research**, serving as a bridge between the nation’s higher education institutions and its advanced labor markets. Their transition from academic study to skilled employment typically occurs through three interconnected visa programs: the **H-1B**, **Optional Practical Training (OPT)**, and **Curricular Practical Training (CPT)**.
 
-Recent proposals to raise the H-1B filing fee to **USD 100 000** represent a potential policy shock.
-Such a dramatic increase could discourage employers from sponsorship, change hiring incentives,
-and increase reliance on temporary pathways like OPT and CPT.
+The **H-1B visa** constitutes the primary pathway for long-term employment sponsorship, allowing U.S. firms to hire foreign professionals in specialty occupations. The **OPT program** provides temporary work authorization for international graduates to gain professional experience in fields related to their academic training, while **CPT** authorizes employment that forms an integral part of a student’s curriculum. Together, these mechanisms form the backbone of the post-study work ecosystem linking U.S. universities to high-skill industries.
 
-This project integrates official USCIS data with scraped employer lists for OPT and CPT to explore
-how the **ecosystem of post-study employment** might adapt under this cost increase.
+Recent policy discussions have introduced proposals to raise the **H-1B filing fee** to as high as **USD 100 000**, representing a substantial policy shock with potentially far-reaching consequences for employer behavior. Such an increase could deter firms from formal sponsorship, reshape hiring incentives, and intensify reliance on temporary work authorizations such as OPT and CPT.
+
+To assess these potential impacts, this study integrates official **USCIS H-1B DataHub (2015–2023)** records with curated datasets of **OPT** and **CPT-friendly employers**. The resulting analysis provides an empirical foundation for examining how the U.S. post-study employment ecosystem might adapt under a significant cost escalation. By combining descriptive data exploration, elasticity modeling, and sector-level adaptability analysis, the research seeks to quantify not only the magnitude of the potential response but also its distribution across industries most reliant on global talent.
 """)
 
 tab1, tab2, tab3 = st.tabs(
-    ["1️⃣ Data & Methodology", "2️⃣ Simulation & Results", "3️⃣ Policy Discussion & Conclusion"]
+    ["1️⃣ Data & Findings", "2️⃣ Simulation & Results", "3️⃣ Policy Discussion & Conclusion"]
 )
 
 # ==============================================================
 # TAB 1 – DATA & METHODOLOGY
 # ==============================================================
+# ==============================================================
+# TAB 1 – DATA & METHODOLOGY
+# ==============================================================
 with tab1:
-    st.header("1. Data and Methodology")
+    st.header("Data and Findings")
 
     st.markdown("""
     ### Data Sources
-    This study combines **three complementary datasets** representing both the *formal* and *adaptive* sides of post-study employment:
-
-    1. **USCIS H-1B DataHub (2015–2023)** – official records of approvals and denials.  
-    2. **Fortune 500 OPT Employers (2024)** – companies employing international students through OPT.  
-    3. **CPT-Friendly Employers (Day-1 CPT list)** – organizations known to hire students under CPT authorization.  
-
-    These datasets were harmonized in `prepare.py`: employer names were standardized,
-    numeric columns validated, and indicator flags (`Fortune500`, `OPT_friendly`, `CPT_friendly`)
-    created to denote participation across pathways.
+    This study draws upon three complementary datasets that together capture both the formal and adaptive dimensions of post-study employment in the United States.  
+    
+    The primary source is the **USCIS H-1B DataHub (2015–2023)**, which provides official records of petition approvals and denials and serves as the foundation for analyzing formal employer sponsorship patterns.  
+    
+    To represent adaptive pathways that operate alongside H-1B, the analysis incorporates the **Fortune 500 OPT Employers (2024)** dataset—containing major U.S. companies that employ international students under Optional Practical Training (OPT) authorization—and the **CPT-Friendly Employers (Day-1 CPT list)**, which identifies institutions and firms known to hire students through Curricular Practical Training (CPT).  
+    
+    These sources were harmonized through a standardized preprocessing workflow implemented in `prepare.py`, where employer names were normalized to a consistent format, numeric variables were validated, and categorical indicators (`Fortune500`, `OPT_friendly`, and `CPT_friendly`) were generated to denote each firm’s participation across post-study pathways.
     """)
 
     st.markdown("""
     ### Methodological Framework
-    1. **Integration** – combine all sources to map employer participation across H-1B, OPT, and CPT.  
-    2. **Elasticity Modeling** – simulate how fee changes affect application volumes.  
-    3. **Visualization** – use Streamlit and Plotly for transparent, reproducible interpretation.  
+    The methodological design proceeds in three stages:  
+    
+    The first stage, **integration**, combines the three datasets to create a unified map of employer participation across H-1B, OPT, and CPT programs, enabling cross-pathway comparisons.  
+    
+    The second stage, **elasticity modeling**, applies an economic-elasticity approach to estimate how changes in total sponsorship cost affect employer application behavior, capturing the responsiveness of demand to fee shocks.  
+
+    Finally, the **visualization** stage translates these analytical results into an interactive, reproducible format using Streamlit and Plotly, ensuring transparency and accessibility for both policy analysts and academic audiences.
     """)
 
+    # --- Chart 1: Baseline trends ---
     st.markdown("### Descriptive Baseline of H-1B Activity (2015–2023)")
-    yearly = df.groupby("Year")[["Total_Approvals","Total_Denials"]].sum().reset_index()
+    yearly = df.groupby("Year")[["Total_Approvals", "Total_Denials"]].sum().reset_index()
     fig1 = px.line(
-        yearly, x="Year", y=["Total_Approvals","Total_Denials"],
-        markers=True, color_discrete_map={"Total_Approvals":"#4DB6AC","Total_Denials":"#FF6F61"},
-        labels={"value":"Applications","variable":"Category"},
+        yearly, x="Year", y=["Total_Approvals", "Total_Denials"],
+        markers=True,
+        color_discrete_map={"Total_Approvals": "#4DB6AC", "Total_Denials": "#FF6F61"},
+        labels={"value": "Applications", "variable": "Category"},
         title="H-1B Approvals and Denials by Year"
     )
     fig1.update_layout(template="plotly_dark")
@@ -112,58 +120,62 @@ with tab1:
 
     st.markdown("""
     *Chart 1 – H-1B Approvals and Denials (2015–2023):*  
-    This line chart tracks the annual totals of approvals and denials reported by USCIS.  
-    Hover to inspect exact counts; peaks correspond to high-demand fiscal years.  
-    Use this as a baseline for understanding macro-level volatility in sponsorship demand.
+    The chart shows that overall employer demand for H-1B sponsorship has remained strong and resilient from 2015 to 2023, even as approval and denial rates fluctuated under changing policy conditions.  
+    Approvals rose steadily until 2022, while denials spiked briefly during periods of stricter review.  
+    Despite these fluctuations, the total volume of applications never collapsed, illustrating a **structural dependence on foreign skilled labor**.  
+    This persistence establishes a baseline of **inelastic demand**, supporting later simulations of how only extreme fee increases would meaningfully reduce participation.
     """)
 
+    # --- Chart 2: Top employers ---
     st.subheader("Top Sponsoring Employers (All Years)")
-    top_emp = df.groupby("Employer")[["Total_Approvals"]].sum().nlargest(10,"Total_Approvals").reset_index()
+    top_emp = df.groupby("Employer")[["Total_Approvals"]].sum().nlargest(10, "Total_Approvals").reset_index()
     fig2 = px.bar(
         top_emp, x="Employer", y="Total_Approvals", text_auto=True,
         title="Top 10 H-1B Sponsors (2015–2023)",
-        labels={"Total_Approvals":"Total Approvals"}
+        labels={"Total_Approvals": "Total Approvals"}
     )
     fig2.update_layout(xaxis_tickangle=-45, template="plotly_dark")
     st.plotly_chart(fig2, use_container_width=True)
 
     st.markdown("""
-    *Chart 2 – Top 10 Employers:*  
-    This bar chart highlights the firms filing the most H-1B petitions across all years.  
-    It reveals employer concentration in consulting, technology, and finance sectors—industries most exposed to fee shocks.
+    *Chart 2 – Top Employers:*  
+    The bar chart reveals that **H-1B sponsorship is highly concentrated among large consulting and technology firms** such as Cognizant, Tata Consultancy Services, Infosys, Microsoft, and Deloitte.  
+    This concentration pattern shows that the H-1B program is structurally anchored in **knowledge-intensive sectors** reliant on global STEM talent.  
+    The dominance of these firms implies that any future fee shock would disproportionately affect these industries, yet their broad visa management capacity and diversified authorization strategies suggest **lower elasticity**—they can absorb higher costs more effectively than smaller employers.  
+    This concentration provides the empirical foundation for the **sectoral adaptability analysis** introduced in Tab 2.
     """)
 
-    st.markdown("""
-    **Observation:**  
-    The largest sponsors are concentrated in **Professional/Consulting**, **Technology**, and **Finance**.  
-    Consulting dominates by total volume, while technology and finance show greater overlap with **OPT**/**CPT** pathways—an early indicator of adaptability explored later.
-    """)
-
-    st.subheader("Employer Overlap Across Pathways")
-    cat_summary = df.groupby("Year")[["Fortune500","OPT_friendly","CPT_friendly"]].sum().reset_index()
+    # --- Chart 3: Employer participation across pathways ---
+    st.subheader("Employer Participation Across Pathways")
+    cat_summary = df.groupby("Year")[["Fortune500", "OPT_friendly", "CPT_friendly"]].sum().reset_index()
     employers_per_year = df.groupby("Year")["Employer_std"].nunique().reset_index(name="Total_Employers")
-    cat_summary = cat_summary.merge(employers_per_year,on="Year",how="left")
-    for col in ["Fortune500","OPT_friendly","CPT_friendly"]:
-        cat_summary[col] = (cat_summary[col]/cat_summary["Total_Employers"])*100
+    cat_summary = cat_summary.merge(employers_per_year, on="Year", how="left")
+    for col in ["Fortune500", "OPT_friendly", "CPT_friendly"]:
+        cat_summary[col] = (cat_summary[col] / cat_summary["Total_Employers"]) * 100
+
     fig3 = px.line(
-        cat_summary, x="Year", y=["Fortune500","OPT_friendly","CPT_friendly"],
-        markers=True, labels={"value":"Share of Employers (%)","variable":"Category"},
+        cat_summary, x="Year",
+        y=["Fortune500", "OPT_friendly", "CPT_friendly"],
+        markers=True,
+        labels={"value": "Share of Employers (%)", "variable": "Category"},
         title="Share of Employers by Category (%)"
     )
     fig3.update_layout(template="plotly_dark")
     st.plotly_chart(fig3, use_container_width=True)
 
     st.markdown("""
-    *Chart 3 – Employer Overlap:*  
-    Each line shows the percentage of employers in Fortune 500, OPT-friendly, or CPT-friendly categories.  
-    The rising OPT/CPT curves suggest growing reliance on adaptive work authorizations beyond H-1B.
+    *Chart 3 – Employer Participation Across Pathways:*  
+    This line chart tracks the share of employers classified as **Fortune 500**, **OPT-friendly**, or **CPT-friendly** from 2015 to 2023.  
+    Although each line represents a separate category rather than a direct overlap, the simultaneous upward trends—especially among Fortune 500 and CPT-friendly firms—indicate that major employers increasingly engage with **alternative visa pathways** alongside formal H-1B sponsorship.  
+    This broadening participation suggests a gradual institutionalization of flexibility within U.S. hiring practices: firms are diversifying their authorization channels to ensure continued access to international talent amid regulatory or cost uncertainty.  
+    This behavioral pattern provides a conceptual bridge to Tab 2, where elasticity modeling quantifies how such flexibility moderates the impact of fee shocks.
     """)
 
 # ==============================================================
 # TAB 2 – SIMULATION & SECTOR RESULTS
 # ==============================================================
 with tab2:
-    st.header("2. Simulation of a USD 100 000 H-1B Fee")
+    st.header("Simulation of a USD 100 000 H-1B Fee")
 
     baseline_fee = 25_000
     st.markdown("""
@@ -264,55 +276,79 @@ with tab2:
 # TAB 3 – POLICY DISCUSSION & CONCLUSION
 # ==============================================================
 with tab3:
-    st.header("3. Policy Discussion and Conclusion")
+    st.header("Policy Discussion and Conclusion")
 
     baseline_fee = 25_000
-    fee_usd = st.session_state.get("fee_usd",25_000)
-    elasticity = st.session_state.get("elasticity",-0.3)
+    fee_usd = st.session_state.get("fee_usd", 25_000)
+    elasticity = st.session_state.get("elasticity", -0.3)
     alpha = (fee_usd - baseline_fee) / baseline_fee
     projected_change = elasticity * alpha * 100
 
-    if abs(projected_change)<10:
-        tone="a mild, manageable adjustment in employer demand"
-        effect="modest"
-    elif abs(projected_change)<40:
-        tone="a noticeable contraction, particularly among smaller or less flexible employers"
-        effect="moderate"
+    if abs(projected_change) < 10:
+        tone = "a mild and manageable adjustment in employer demand"
+        effect = "modest"
+    elif abs(projected_change) < 40:
+        tone = "a noticeable contraction, particularly among smaller or less flexible employers"
+        effect = "moderate"
     else:
-        tone="a severe contraction that could reshape sponsorship patterns"
-        effect="strong"
+        tone = "a severe contraction that could reshape sponsorship patterns"
+        effect = "strong"
 
     st.markdown(f"""
     ### Policy Interpretation
-    Increasing the total H-1B cost to **USD {fee_usd:,}** (≈ {alpha*100:.0f}% above baseline) is projected to reduce applications by ≈ **{abs(projected_change):.1f}%**, indicating {tone}.  
-    **Technology (Information)** and **Finance/Insurance** show the highest adaptability scores, while **Professional/Consulting** dominates by volume but has mixed resilience.
+
+    The simulation results suggest that increasing the total H-1B sponsorship cost to **USD {fee_usd:,}**
+    (approximately **{alpha*100:.0f}%** above the current baseline) would result in an estimated
+    **{abs(projected_change):.1f}%** reduction in overall H-1B applications, assuming an elasticity of **{elasticity}**.
+    This outcome represents {tone}, implying that employer responses to policy shocks are not uniform across the economy.
+    Rather, the degree of adjustment depends heavily on each sector’s flexibility and capacity to absorb increased costs.
+
+    The **Technology (Information)** and **Finance/Insurance** sectors exhibit the highest adaptability scores in the dataset,
+    suggesting that firms within these industries can more readily adjust to elevated sponsorship costs by reallocating workers
+    through alternative visa pathways such as **OPT** or **CPT**. In contrast, **Professional and Consulting** firms remain
+    the largest contributors to total H-1B petitions but demonstrate relatively lower adaptive capacity,
+    indicating greater vulnerability to sharp fee increases. These findings underscore the asymmetric impact of cost shocks
+    across industries, revealing that elevated fees are likely to **redirect skilled labor flows** rather than eliminate them entirely.
     """)
 
     st.markdown("""
-    *Interpretive Note:*  
-    This narrative synthesizes data from all prior charts—linking cost sensitivity (Chart 4)  
-    with sector adaptability (Charts 5–6) to provide a holistic policy perspective.
-    """)
+    ### Policy Implications and Recommendations
 
-    st.markdown("""
-    ### Policy Recommendations
-    1. **Tiered H-1B Fee Structure** – scale by employer size or wage level to preserve access for smaller firms.  
-    2. **Extend STEM-OPT Duration** – from 36 to 48 months to support continuity in tech and finance.  
-    3. **Support Consulting Firms** – encourage university and cap-exempt partnerships to offset fee burdens.  
-    4. **Visa Portfolio Transparency** – require joint reporting of H-1B/OPT/CPT usage to inform future reforms.
+    The empirical and simulated results collectively suggest that policy instruments affecting the H-1B program
+    should be designed with sectoral heterogeneity in mind. A uniform fee increase risks amplifying disparities between
+    large, flexible employers and smaller firms that lack access to alternative visa portfolios.  
+
+    First, a **tiered H-1B fee structure**—scaled according to employer size or prevailing wage level—could preserve access
+    for small and mid-sized enterprises while ensuring that larger corporations contribute proportionally more.  
+    
+    Second, extending the **STEM-OPT duration** from 36 to 48 months would strengthen short-term employment continuity for
+    graduates in high-demand disciplines such as technology and finance, mitigating the transition pressure from OPT to H-1B status.  
+    
+    Third, targeted support for **consulting and professional service firms** through university partnerships and cap-exempt collaborations
+    could sustain participation in the high-skill labor market while easing adjustment burdens.  
+    
+    Finally, establishing **visa portfolio transparency**, requiring joint reporting of H-1B, OPT, and CPT utilization,
+    would enhance evidence-based policy evaluation and future reform design.
     """)
 
     st.markdown(f"""
     ### Broader Implications
-    The combined model and sector evidence show **{effect} substitution dynamics**: higher costs redirect international graduates toward sectors with stronger alternative visa options rather than eliminate demand.  
-    The three pathways form an interconnected ecosystem where adaptability determines resilience to policy shocks.
+
+    The combined evidence from elasticity modeling and sector-level adaptability points to **{effect} substitution dynamics**
+    within the post-study employment ecosystem. Rather than a collapse in foreign talent inflows, the results suggest
+    a reallocation process in which more adaptive sectors absorb displaced demand through alternative visa channels.
+    The three programs—H-1B, OPT, and CPT—thus function as **a single interdependent system**, where adaptability determines
+    both sectoral resilience and the aggregate capacity to sustain skilled labor supply under policy stress.
     """)
 
     st.markdown("""
     ---
     ### Conclusion
-    > **Technology and Finance remain the most adaptive sectors under H-1B fee shocks**,  
-    > while **Consulting** remains the largest sponsor but faces greater adjustment risks.
 
-    Evidence-based fee design and temporary program extensions are crucial to preserving U.S. innovation capacity and global talent access.
+    This study demonstrates that **Technology** and **Finance** remain the most adaptive sectors under simulated H-1B fee shocks,
+    whereas **Consulting** continues to dominate sponsorship volume but faces greater structural constraints.
+    Policymakers should recognize that openness to international talent and the flexibility of post-study employment programs
+    are complementary drivers of U.S. competitiveness.  
+    Data-driven calibration of visa fees and program durations, coupled with transparency across employment pathways,
+    is essential to preserving both economic dynamism and equitable access to skilled labor opportunities.
     """)
