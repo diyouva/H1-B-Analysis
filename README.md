@@ -39,7 +39,9 @@ project/
 │   ├── h1b_datahubexport-2015.csv … 2023.csv
 │   ├── fortune500_opt_companies_2024.csv
 │   ├── cpt_employers_day1cptuniversities_bs4.csv
-│   └── clean_h1b_data.csv
+│   ├── clean_h1b_data.csv
+│   ├── summary_overall.csv
+│   └── sector_summary.csv
 │
 ├── policy_brief/
 │   └── Policy Brief.pdf
@@ -98,6 +100,9 @@ where:
 - *F* = total cost  
 - *ε* = elasticity (default −0.3)
 
+With a baseline cost of **USD 25 000**, raising fees to **USD 100 000** represents a **+300 %** increase.  
+At ε = −0.3, the model projects an approximate **90 % decline** in H-1B applications.
+
 ---
 
 ## 📊 Dashboard Tabs
@@ -110,38 +115,38 @@ where:
 
 ---
 
-## 📈 Key Insights
+## 📈 Key Insights (verified)
 
-- **Demand is persistent:** H-1B applications stay strong even through restrictive periods.  
-- **Sponsorship is concentrated:** Consulting and tech firms drive most petitions.  
-- **Firms are adapting:** OPT- and CPT-friendly employers are growing in share.  
-- **Fee sensitivity is uneven:** A USD 100 000 cost could reduce total applications by ~20–25%.  
-- **Technology and Finance adapt best; Consulting faces the most pressure.**
+- **Demand is persistent:** H-1B applications remain strong through 2015–2023, peaking in 2023.  
+- **Sponsorship is concentrated:** Large consulting/IT and tech firms account for most filings.  
+- **Adaptive pathways:** **CPT-friendly** participation increases modestly; **OPT trend is not observable** due to name-matching limitations.  
+- **Fee sensitivity:** At ε = −0.3 and a +300 % fee rise (USD 25 000 → 100 000), projected change ≈ **−90 %**.  
+- **Sector view:** **Consulting** dominates by volume; proxies suggest large firms (often Tech/Finance) may have more flexibility, but **sector adaptability is not strongly differentiated** in current data.
 
 ---
 
 ## 🏛️ Policy Interpretation
 
-A single high fee affects sectors differently.  
-Tech and finance firms can absorb higher costs or shift workers through OPT/CPT channels, while consulting firms—though large in volume—have fewer alternatives.  
-Higher costs therefore **redirect** skilled labor rather than eliminate it.
+A uniform USD 100 000 H-1B fee would lead to an estimated **90 % reduction** in applications, with uneven impacts across industries.  
+Technology and finance firms can better absorb higher costs or reallocate workers through OPT/CPT channels, while consulting firms—though the largest sponsors—show lower adaptive capacity.  
+This suggests that fee increases would **redirect skilled labor** rather than eliminate it entirely.
 
 ---
 
 ## 🧩 Policy Recommendations
 
-- **Tiered H-1B Fees:** Scale by firm size or wage level to keep smaller employers competitive.  
-- **Extend STEM-OPT:** 36 → 48 months to give graduates more career stability.  
-- **Support Consulting Firms:** Encourage university partnerships and cap-exempt options.  
-- **Visa Transparency:** Require joint reporting of H-1B, OPT, and CPT data for future analysis.
+- **Tiered H-1B Fees:** Scale by firm size or wage level to maintain small-firm competitiveness.  
+- **Extend STEM-OPT Duration:** 36 → 48 months to strengthen employment continuity.  
+- **Support Consulting Firms:** Encourage university partnerships and cap-exempt collaborations.  
+- **Visa Transparency:** Mandate joint reporting of H-1B, OPT, and CPT utilization for evidence-based reform.
 
 ---
 
 ## 🧠 Broader Takeaways
 
-Raising H-1B fees doesn’t collapse demand—it reshapes it.  
-The H-1B, OPT, and CPT programs act as a connected system where flexibility determines resilience.  
-Understanding this interplay is key to maintaining U.S. innovation and global competitiveness.
+Raising H-1B costs reshapes rather than destroys demand.  
+The H-1B, OPT, and CPT programs form an interdependent ecosystem where **adaptability determines resilience**.  
+Understanding this interaction is key to sustaining U.S. innovation and global competitiveness.
 
 ---
 
