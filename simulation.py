@@ -1,21 +1,3 @@
-# simulation.py
-"""
-SIMULATION.PY
-Fee elasticity simulation for:
-"Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock"
-
-Author: Diyouva C. Novith
-Carnegie Mellon University, Heinz College of Information Systems and Public Policy
-
-Purpose:
-Estimate how H-1B applications respond to a fee shock and how firms with different flexibility levels
-(adapted through OPT and CPT) redistribute demand across employment categories.
-
-Economic rationale:
-    ΔApplications / Applications = Elasticity × ΔFee
-A higher fee leads to proportionally fewer applications, with adaptive substitution among flexible firms.
-"""
-
 import pandas as pd
 
 # ----------------------------------------------------------------------
