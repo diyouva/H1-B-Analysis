@@ -90,10 +90,13 @@ The workflow has three main steps:
 3. **Visualization:** Build an interactive Streamlit dashboard using Plotly.
 
 Elasticity is modeled as:
-\[
-\frac{\Delta A}{A} = \varepsilon \times \frac{\Delta F}{F}
-\]
-where \(A\) = applications, \(F\) = cost, and \(\varepsilon\) = elasticity (default −0.3).
+
+**ΔA / A = ε × (ΔF / F)**
+
+where:
+- *A* = number of applications  
+- *F* = total cost  
+- *ε* = elasticity (default −0.3)
 
 ---
 
