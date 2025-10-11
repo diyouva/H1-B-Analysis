@@ -682,7 +682,4 @@ with tab3:
     whereas **Consulting** continues to dominate sponsorship volume but faces greater structural constraints.
     Policymakers should recognize that openness to international talent and the flexibility of post-study employment programs
     are complementary drivers of U.S. competitiveness.  
-    
-    Data-driven calibration of visa fees and program durations, coupled with transparency across employment pathways,
-    is essential to preserving both economic dynamism and equitable access to skilled labor opportunities.
     """)
