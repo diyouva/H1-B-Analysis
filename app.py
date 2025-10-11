@@ -186,9 +186,8 @@ with tab2:
     projected_change_low = elasticity_low * alpha * 100
     projected_change_high = elasticity_high * alpha * 100
 
-    # ==============================================================
     # TWO-COLUMN PARAMETER SUMMARY
-    # ==============================================================
+    
     col1, col2 = st.columns(2)
 
     with col1:
@@ -222,9 +221,7 @@ with tab2:
 
     st.markdown("<hr style='margin-top:0px; margin-bottom:20px;'>", unsafe_allow_html=True)
 
-    # ==============================================================
     # VISUALIZATION
-    # ==============================================================
 
     custom_palette = ["#c4452f", "#6b705c"]  # red = less flexible, green-gray = more flexible
 
@@ -313,13 +310,9 @@ with tab2:
         This pattern reveals a structural asymmetry in the labor market response: while less flexible employers retract sharply in the face of rising costs, more adaptable organizations maintain a steadier level of engagement.
         Such heterogeneity underscores the importance of organizational adaptability as a moderating factor in policy transmission and highlights how fee-based interventions can have uneven effects across employer types.
         """)
+        st.markdown("<br>", unsafe_allow_html=True)
 
-    # ==============================================================
-    # SECTOR ANALYSIS – CLEAN HORIZONTAL VISUALS + PUNCHLINE
-    # ==============================================================
-
-    # --- Space before title (visual separation) ---
-    st.markdown("<br><br>", unsafe_allow_html=True)
+    # SECTOR ANALYSIS
 
     st.markdown("""
     <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
@@ -376,9 +369,8 @@ with tab2:
     color_approvals = "#4DB6AC"  # teal
     color_adaptive = "#E4A672"   # warm tan
 
-    # ==============================================================
-    # CLEAN HORIZONTAL BAR VISUALIZATION
-    # ==============================================================
+    # --- CLEAN HORIZONTAL BAR VISUALIZATION ---
+
     col1, col2 = st.columns(2)
 
     with col1:
