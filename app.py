@@ -222,10 +222,22 @@ with tab2:
     # --- Optional summary metric ---
     projected_change_low = elasticity_low * alpha * 100
     projected_change_high = elasticity_high * alpha * 100
-    st.metric(
-        label="Projected Change Range (Δ Applications, %)",
-        value=f"{projected_change_high:.1f}% to {projected_change_low:.1f}%",
-        help="Expected reduction in applications from more vs. less flexible employers"
+
+    st.markdown(
+        f"""
+        <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
+            <div style="font-size:16px; font-weight:bold;">
+                Projected Change Range (Δ Applications, %)
+            </div>
+            <div style="font-size:32px; font-weight:bold; margin-top:6px;">
+                {projected_change_high:.1f}% to {projected_change_low:.1f}%
+            </div>
+            <div style="font-size:14px; color:#555;">
+                Expected reduction in applications from more vs. less flexible employers
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
     # ==============================================================
@@ -294,14 +306,6 @@ with tab2:
         )
 
         st.plotly_chart(fig_sim, use_container_width=True)
-    # if "Year" in sim.columns:
-    #     fig_sim = px.bar(
-    #         sim, x="Year", y="Change_%", color="Flexibility_Index",
-    #         title="Simulated Change in H-1B Applications by Employer Flexibility",
-    #         labels={"Change_%":"Change (%)","Flexibility_Index":"Flexibility Index"}
-    #     )
-    #     fig_sim.update_layout(template="plotly_dark")
-    #     st.plotly_chart(fig_sim, use_container_width=True)
 
         st.markdown("""
         The simulation indicates that the decline in H-1B applications resulting from fee increases varies systematically across employers. Firms characterized by higher flexibility show a significantly smaller reduction in application volume, suggesting that adaptive capacity enables them to absorb policy-induced cost pressures more effectively. This pattern reveals a structural asymmetry in the labor market response: while less flexible employers retract sharply in the face of rising costs, more adaptable organizations maintain a steadier level of engagement. Such heterogeneity underscores the importance of organizational adaptability as a moderating factor in policy transmission and highlights how fee-based interventions can have uneven effects across employer types.
@@ -361,7 +365,7 @@ with tab2:
 
     st.markdown(f"""
     ### Key Findings
-    - Raising H-1B cost to **USD {fee_usd:,}** (~{alpha*100:.0f}% above baseline) reduces applications ≈ **{abs(projected_change):.1f}%**.  
+    - Raising H-1B cost to **USD {fee_usd:,}** (~{alpha*100:.0f}% above baseline) reduces applications by roughly **{abs(projected_change_high):.1f}% to {abs(projected_change_low):.1f}%**, depending on employer flexibility.  
     - Employers with broad visa portfolios offset this via OPT/CPT.  
     - **Technology and Finance** are most adaptive; **Consulting** leads by volume but faces adjustment risk.
     """)
@@ -379,7 +383,9 @@ with tab3:
     fee_usd = st.session_state.get("fee_usd", 25_000)
     elasticity = st.session_state.get("elasticity", -0.3)
     alpha = (fee_usd - baseline_fee) / baseline_fee
-    projected_change = elasticity * alpha * 100
+    
+    # Average elasticity proxy for overall change narrative
+    projected_change = ((elasticity_high + elasticity_low) / 2) * alpha * 100
 
     if abs(projected_change) < 10:
         tone = "a mild and manageable adjustment in employer demand"
