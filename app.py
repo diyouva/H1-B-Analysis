@@ -310,50 +310,121 @@ with tab2:
         st.markdown("""
         The simulation indicates that the decline in H-1B applications resulting from fee increases varies systematically across employers. Firms characterized by higher flexibility show a significantly smaller reduction in application volume, suggesting that adaptive capacity enables them to absorb policy-induced cost pressures more effectively. This pattern reveals a structural asymmetry in the labor market response: while less flexible employers retract sharply in the face of rising costs, more adaptable organizations maintain a steadier level of engagement. Such heterogeneity underscores the importance of organizational adaptability as a moderating factor in policy transmission and highlights how fee-based interventions can have uneven effects across employer types.
         """)
+        st.markdown("<br><br>", unsafe_allow_html=True)
 
     # --- Sector Analysis ---
-    st.markdown("### Sector-Level Evidence from H-1B Data")
+    st.markdown("""
+    <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
+        <div style="font-size:22px; font-weight:bold; margin-bottom:2px;">
+            Industries that diversify visa channels—like Finance and Technology—absorb cost shocks far better than sectors dependent solely on H-1B sponsorship.
+        </div>
+        <div style="font-size:18px; font-style:italic; margin-top:2px;">
+            Sector-Level Evidence from H-1B Data
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # --- Sector mapping ---
     df["NAICS2"] = (df["NAICS"].astype(str).str[:2]).astype(int)
     naics_map = {
-        51:"Technology (Information)",52:"Finance/Insurance",54:"Professional/Consulting",
-        55:"Management of Companies",61:"Education",62:"Healthcare/Social Assistance",
-        31:"Manufacturing",32:"Manufacturing",33:"Manufacturing"
+        51: "Technology (Information)",
+        52: "Finance/Insurance",
+        54: "Professional/Consulting",
+        55: "Management of Companies",
+        61: "Education",
+        62: "Healthcare/Social Assistance",
+        31: "Manufacturing",
+        32: "Manufacturing",
+        33: "Manufacturing",
     }
     df["Sector"] = df["NAICS2"].map(naics_map).fillna("Other")
 
+    # --- Aggregate and normalize ---
     sector_summary = (
         df.groupby("Sector")
-        .agg(Total_Approvals=("Total_Approvals","sum"),
-             mean_flex=("Flexibility_Index","mean"),
-             share_opt=("OPT_friendly","mean"),
-             share_cpt=("CPT_friendly","mean"),
-             share_f500=("Fortune500","mean"))
+        .agg(
+            Total_Approvals=("Total_Approvals", "sum"),
+            mean_flex=("Flexibility_Index", "mean"),
+            share_opt=("OPT_friendly", "mean"),
+            share_cpt=("CPT_friendly", "mean"),
+            share_f500=("Fortune500", "mean"),
+        )
         .reset_index()
     )
 
-    for col in ["mean_flex","share_opt","share_cpt","share_f500"]:
-        denom = (sector_summary[col].max()-sector_summary[col].min()) or 1e-9
-        sector_summary[col+"_norm"]=(sector_summary[col]-sector_summary[col].min())/denom
-    sector_summary["adaptive_score"]=sector_summary[
-        ["mean_flex_norm","share_opt_norm","share_cpt_norm","share_f500_norm"]
+    for col in ["mean_flex", "share_opt", "share_cpt", "share_f500"]:
+        denom = (sector_summary[col].max() - sector_summary[col].min()) or 1e-9
+        sector_summary[col + "_norm"] = (sector_summary[col] - sector_summary[col].min()) / denom
+
+    sector_summary["adaptive_score"] = sector_summary[
+        ["mean_flex_norm", "share_opt_norm", "share_cpt_norm", "share_f500_norm"]
     ].mean(axis=1)
 
-    top_approvals=sector_summary.sort_values("Total_Approvals",ascending=False).head(10)
-    top_adapt=sector_summary.sort_values("adaptive_score",ascending=False).head(10)
+    # --- Top 10 sectors ---
+    top_approvals = sector_summary.sort_values("Total_Approvals", ascending=True).tail(10)
+    top_adapt = sector_summary.sort_values("adaptive_score", ascending=True).tail(10)
 
-    col1,col2=st.columns(2)
+    # --- Theme colors ---
+    color_approvals = "#4DB6AC"  # teal
+    color_adaptive = "#E4A672"   # warm tan
+
+    col1, col2 = st.columns(2)
+
     with col1:
-        st.plotly_chart(
-            px.bar(top_approvals,x="Sector",y="Total_Approvals",text_auto=True,
-                   title="Top Sectors by H-1B Approvals",
-                   color_discrete_sequence=["#4DB6AC"]).update_layout(template="plotly_dark"),
-            use_container_width=True)
+        fig_approvals = px.bar(
+            top_approvals,
+            y="Sector",
+            x="Total_Approvals",
+            text="Total_Approvals",
+            orientation="h",
+            color_discrete_sequence=[color_approvals],
+            labels={"Total_Approvals": "Total Approvals", "Sector": ""},
+            title="<b>Top Sectors by H-1B Approvals</b>",
+        )
+        fig_approvals.update_traces(
+            texttemplate="%{x:,.0f}",
+            textposition="outside",
+            marker_line_color="#2b2b2b",
+            marker_line_width=0.8,
+        )
+        fig_approvals.update_layout(
+            template="simple_white",
+            font=dict(family="Georgia", color="#2b2b2b"),
+            yaxis=dict(title="", showgrid=False, showticklabels=True),
+            xaxis=dict(title="", showgrid=True, gridcolor="rgba(0,0,0,0.05)", visible=False),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            margin=dict(t=70, b=60, l=20, r=40),
+        )
+        st.plotly_chart(fig_approvals, use_container_width=True)
+
     with col2:
-        st.plotly_chart(
-            px.bar(top_adapt,x="Sector",y="adaptive_score",text_auto=True,
-                   title="Top Sectors by Adaptive Score",
-                   color_discrete_sequence=["#FFB74D"]).update_layout(template="plotly_dark"),
-            use_container_width=True)
+        fig_adaptive = px.bar(
+            top_adapt,
+            y="Sector",
+            x="adaptive_score",
+            text="adaptive_score",
+            orientation="h",
+            color_discrete_sequence=[color_adaptive],
+            labels={"adaptive_score": "Adaptive Score", "Sector": ""},
+            title="<b>Top Sectors by Adaptive Score</b>",
+        )
+        fig_adaptive.update_traces(
+            texttemplate="%{x:.2f}",
+            textposition="outside",
+            marker_line_color="#2b2b2b",
+            marker_line_width=0.8,
+        )
+        fig_adaptive.update_layout(
+            template="simple_white",
+            font=dict(family="Georgia", color="#2b2b2b"),
+            yaxis=dict(title="", showgrid=False, showticklabels=True),
+            xaxis=dict(title="", showgrid=True, gridcolor="rgba(0,0,0,0.05)", visible=False),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            margin=dict(t=70, b=60, l=20, r=40),
+        )
+        st.plotly_chart(fig_adaptive, use_container_width=True)
 
     st.markdown("""
     *Charts 5 & 6 – Sector Comparison:*  
