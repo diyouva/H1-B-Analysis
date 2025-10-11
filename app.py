@@ -136,14 +136,16 @@ with tab1:
     The historical trend of H-1B approvals and denials underscores a fundamental insight: **employer reliance on foreign skilled labor is deeply structural rather than cyclical**. Even across years marked by shifting policy enforcement, the sustained volume of applications reveals an **inelastic demand** for global talent. Periods of heightened scrutiny produced temporary fluctuations in denials, yet total participation remained resilient—signaling that the H-1B program has become a **core institutional mechanism** within the U.S. innovation economy. This persistent baseline defines the counterfactual against which the subsequent fee-shock simulation measures potential behavioral change.
     """)
 
-    # --- CHART 2: HORIZONTAL DESCENDING BAR WITH BALANCED COLUMN HEIGHT ---
+    # --- CHART 2: HORIZONTAL DESCENDING BAR ---
     st.markdown("""
     <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
-        <div style="font-size:22px; font-weight:bold; margin-bottom:2px;">
-            H-1B sponsorship in the United States is dominated by a handful of large consulting and technology firms—
-            revealing a structurally concentrated and low-elasticity demand for global STEM talent.
+        <div style="font-size:20px; font-weight:bold; margin-bottom:0px;">
+            H-1B sponsorship in the United States is dominated by a handful of large consulting and technology firms:
         </div>
-        <div style="font-size:18px; font-style:italic; margin-top:2px; margin-bottom:25px;">
+        <div style="font-size:18px; font-weight:bold; margin-top:0px;">
+            Revealing a structurally concentrated and low-elasticity demand for global STEM talent.
+        </div>
+        <div style="font-size:14px; font-style:italic; margin-top:4px; margin-bottom:15px;">
             Concentration of Sponsorship Among Major Employers
         </div>
     </div>
@@ -207,15 +209,15 @@ with tab1:
         <div style="font-family:Georgia; font-size:16px; color:#2b2b2b; line-height:1.65;">
         The distribution of H-1B approvals underscores a <b>concentration of sponsorship within major consulting and technology firms</b>—
         notably Cognizant, Tata Consultancy Services, Infosys, Microsoft, and Deloitte.  
-        <br><br>
+        <br>
         This structural dominance reflects a reliance on <b>knowledge-intensive, globally integrated industries</b> to sustain high-skill labor demand.  
         While such firms would bear the largest financial exposure to policy changes, their <b>diversified visa portfolios and internal compliance capacity</b> 
         enable them to absorb fee shocks more effectively than smaller employers.  
-        <br><br>
+        <br>
         At an institutional level, these firms’ <b>operational resilience</b> demonstrates how globalized corporate structures 
         mitigate policy volatility through scale, automation, and legal infrastructure. Their capacity to reallocate labor costs across subsidiaries 
         allows sustained competitiveness even when sponsorship costs rise.  
-        <br><br>
+        <br>
         This employer-level concentration not only highlights <b>the asymmetry of policy impact</b> within the high-skill labor market 
         but also serves as a quantitative bridge to the <b>sectoral adaptability analysis</b> explored in Tab 2.
         </div>
@@ -254,13 +256,13 @@ with tab1:
 # TAB 2 – SIMULATION & SECTOR RESULTS
 # ==============================================================
 with tab2:
-    # --- Place dynamic title placeholder FIRST ---
+    # --- Dynamic title ---
     title_placeholder = st.empty()
 
     # --- Baseline setup ---
     baseline_fee = 25_000
 
-    # --- User inputs (below the title) ---
+    # --- User inputs ---
     st.markdown("""
     **Interactive Filters**  
     Use the sliders below to test different H-1B fee levels and employer responsiveness.  
@@ -350,10 +352,10 @@ with tab2:
 
     # VISUALIZATION
 
-    custom_palette = ["#c4452f", "#6b705c"]  # red = less flexible, green-gray = more flexible
+    custom_palette = ["#c4452f", "#6b705c"]
 
     if "Year" in sim.columns and "Flex_Group" in sim.columns:
-        # --- Chart title above ---
+        
         st.markdown("""
         <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
             <div style="font-size:20px; font-weight:bold;">
@@ -412,7 +414,7 @@ with tab2:
 
         st.plotly_chart(fig_sim, use_container_width=True)
 
-        # --- Projected range summary right below the chart ---
+        # --- Projected range summary ---
         st.markdown(
             f"""
             <div style="text-align:center; font-family:Georgia; color:#2b2b2b; margin-top:-25px;">
@@ -430,7 +432,6 @@ with tab2:
             unsafe_allow_html=True
         )
 
-        # --- Analytical paragraph below chart ---
         st.markdown("""
         The simulation indicates that the decline in H-1B applications resulting from fee increases varies systematically across employers.
         Firms characterized by higher flexibility show a significantly smaller reduction in application volume, suggesting that adaptive capacity enables them to absorb policy-induced cost pressures more effectively.
@@ -565,7 +566,7 @@ with tab2:
             textfont=dict(family="Georgia", size=14, color="#2b2b2b"),
             marker_line_color="#2b2b2b",
             marker_line_width=0.8,
-            cliponaxis=False,  # ✅ prevents cutoff
+            cliponaxis=False,
         )
 
         fig_adaptive.update_layout(
@@ -576,11 +577,10 @@ with tab2:
             xaxis=dict(title="", showgrid=True, gridcolor="rgba(0,0,0,0.05)", visible=False),
             plot_bgcolor="rgba(0,0,0,0)",
             paper_bgcolor="rgba(0,0,0,0)",
-            margin=dict(t=70, b=60, l=20, r=120),  # ✅ add more right margin
+            margin=dict(t=70, b=60, l=20, r=120),
         )
         st.plotly_chart(fig_adaptive, use_container_width=True)
 
-    # --- Analytical narrative paragraph ---
     st.markdown(
         """
         <div style="margin-top:-25px; font-family:Georgia; color:#2b2b2b; font-size:16px; line-height:1.55;">
