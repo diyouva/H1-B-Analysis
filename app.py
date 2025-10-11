@@ -256,9 +256,6 @@ with tab2:
             title="Simulated Change in H-1B Applications by Employer Flexibility",
             labels={"Change_%":"Change (%)","Flexibility_Index":"Flexibility Index"}
         )
-<<<<<<< Updated upstream
-        fig_sim.update_layout(template="plotly_dark")
-=======
 
         fig_sim.update_layout(
             template="simple_white",
@@ -290,7 +287,6 @@ with tab2:
             cliponaxis=False
         )
 
->>>>>>> Stashed changes
         st.plotly_chart(fig_sim, use_container_width=True)
 
         # --- Projected range summary just below the chart ---
@@ -317,10 +313,7 @@ with tab2:
         Darker colors = higher flexibility = smaller decline.  
         This visualization quantifies how adaptable employers cushion the effect of rising fees.
         """)
-<<<<<<< Updated upstream
-=======
         st.markdown("<br>", unsafe_allow_html=True)
->>>>>>> Stashed changes
 
     # --- Sector Analysis ---
     st.markdown("### Sector-Level Evidence from H-1B Data")
@@ -360,13 +353,6 @@ with tab2:
                    color_discrete_sequence=["#4DB6AC"]).update_layout(template="plotly_dark"),
             use_container_width=True)
     with col2:
-<<<<<<< Updated upstream
-        st.plotly_chart(
-            px.bar(top_adapt,x="Sector",y="adaptive_score",text_auto=True,
-                   title="Top Sectors by Adaptive Score",
-                   color_discrete_sequence=["#FFB74D"]).update_layout(template="plotly_dark"),
-            use_container_width=True)
-=======
         fig_adaptive = px.bar(
             top_adapt,
             y="Sector",
@@ -397,7 +383,6 @@ with tab2:
             margin=dict(t=70, b=60, l=20, r=120),  # ✅ add more right margin
         )
         st.plotly_chart(fig_adaptive, use_container_width=True)
->>>>>>> Stashed changes
 
     st.markdown("""
     The sectoral analysis reveals a clear structural asymmetry in how industries within the U.S. high-skill labor market absorb policy-induced cost shocks. Sectors dominated by **Professional and Consulting Services**, while accounting for the majority of H-1B petition volume, display limited adaptive capacity and heavy reliance on formal sponsorship mechanisms. This concentration of applications among a few large consulting employers reflects a growth model dependent on predictable visa access rather than internal flexibility or workforce diversification. Consequently, such industries are disproportionately exposed to fee-related policy changes and are likely to experience sharper contractions when sponsorship costs rise.  
