@@ -75,7 +75,19 @@ with tab1:
     """)
 
     # --- Chart 1: Baseline trends ---
-    st.markdown("### Descriptive Baseline of H-1B Activity (2015–2023)")
+    st.markdown("""
+    <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
+        <div style="font-size:20px; font-weight:bold; margin-bottom:0px;">
+            Employer reliance on H-1B talent is structural, not situational:
+        </div>
+        <div style="font-size:18px; font-weight:bold; margin-top:0px;">
+            Establishing a stable baseline of inelastic demand before any fee-shock scenario.
+        </div>
+        <div style="font-size:14px; font-style:italic; margin-top:4px;">
+            Descriptive Baseline of H-1B Activity (2015–2023)
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
     yearly = df.groupby("Year")[["Total_Approvals", "Total_Denials"]].sum().reset_index()
     fig1 = px.line(
         yearly, x="Year", y=["Total_Approvals", "Total_Denials"],
@@ -229,10 +241,10 @@ with tab2:
         # --- Chart title above ---
         st.markdown("""
         <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
-            <div style="font-size:22px; font-weight:bold;">
+            <div style="font-size:20px; font-weight:bold;">
                 Employers with greater flexibility exhibit smaller declines in H-1B applications under rising fees.
             </div>
-            <div style="font-size:18px; font-style:italic; margin-top:2px;">
+            <div style="font-size:14px; font-style:italic; margin-top:2px;">
                 Simulated Change in H-1B Applications by Employer Flexibility
             </div>
         </div>
@@ -289,10 +301,10 @@ with tab2:
         st.markdown(
             f"""
             <div style="text-align:center; font-family:Georgia; color:#2b2b2b; margin-top:-25px;">
-                <div style="font-size:18px; font-weight:bold; margin-bottom:2px;">
+                <div style="font-size:16px; font-weight:bold; margin-bottom:2px;">
                     Projected Change Range (Δ Applications, %)
                 </div>
-                <div style="font-size:32px; font-weight:bold; color:#c4452f; margin-top:-8px; margin-bottom:6px;">
+                <div style="font-size:28px; font-weight:bold; color:#c4452f; margin-top:-8px; margin-bottom:6px;">
                     {projected_change_high:.1f}% to {projected_change_low:.1f}%
                 </div>
                 <div style="font-size:14px; color:#555; margin-top:-2px; margin-bottom:18px;">
@@ -316,10 +328,13 @@ with tab2:
 
     st.markdown("""
     <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
-        <div style="font-size:22px; font-weight:bold; margin-bottom:2px;">
-            Industries that diversify visa channels—like Finance and Technology—absorb cost shocks far better than sectors dependent solely on H-1B sponsorship.
+        <div style="font-size:22px; font-weight:bold; margin-bottom:0px;">
+            Industries that diversify visa channels—like Finance and Technology—
         </div>
-        <div style="font-size:18px; font-style:italic; margin-top:2px;">
+        <div style="font-size:22px; font-weight:bold; margin-top:0px;">
+            absorb cost shocks far better than sectors dependent solely on H-1B sponsorship.
+        </div>
+        <div style="font-size:18px; font-style:italic; margin-top:4px;">
             Sector-Level Evidence from H-1B Data
         </div>
     </div>
@@ -406,6 +421,7 @@ with tab2:
             marker_line_width=0.8,
         )
         fig_approvals.update_layout(
+            title=dict(x=0.5, xanchor="center", yanchor="top"),
             template="simple_white",
             font=dict(family="Georgia", color="#2b2b2b"),
             yaxis=dict(title="", showgrid=False, showticklabels=True),
@@ -438,6 +454,7 @@ with tab2:
         )
 
         fig_adaptive.update_layout(
+            title=dict(x=0.5, xanchor="center", yanchor="top"),
             template="simple_white",
             font=dict(family="Georgia", color="#2b2b2b"),
             yaxis=dict(title="", showgrid=False, showticklabels=True),

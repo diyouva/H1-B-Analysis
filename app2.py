@@ -146,21 +146,12 @@ with tab1:
 with tab2:
     st.header("Simulation of a USD 100 000 H-1B Fee")
 
+    # --- Baseline setup ---
     baseline_fee = 25_000
     st.markdown("""
     **Interactive Filters**  
-    Use the sliders below to test different H-1B fee levels and elasticity assumptions.  
-    The results will update automatically to show how sensitive total applications are to these parameters.
-    """)
-    fee_usd = st.slider("Set total H-1B sponsorship cost (USD)",5_000,100_000,25_000,step=5_000)
-    elasticity = st.slider("Elasticity (Responsiveness)",-1.0,0.0,-0.3,step=0.05)
-    alpha = (fee_usd - baseline_fee) / baseline_fee
-    sim = simulate_fee_change(df, alpha=alpha, elasticity=elasticity)
-    projected_change = elasticity * alpha * 100
-
-    st.markdown(f"""
-    **Simulation Parameters:**  
-    Baseline = ${baseline_fee:,} | New Fee = ${fee_usd:,} | Fee Change = {alpha*100:.1f}% | Elasticity = {elasticity}
+    Use the sliders below to test different H-1B fee levels and employer responsiveness.  
+    The chart dynamically illustrates how flexibility affects the magnitude of the decline in applications.
     """)
 
     # --- User inputs ---
@@ -195,9 +186,8 @@ with tab2:
     projected_change_low = elasticity_low * alpha * 100
     projected_change_high = elasticity_high * alpha * 100
 
-    # ==============================================================
     # TWO-COLUMN PARAMETER SUMMARY
-    # ==============================================================
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -231,9 +221,7 @@ with tab2:
 
     st.markdown("<hr style='margin-top:0px; margin-bottom:20px;'>", unsafe_allow_html=True)
 
-    # ==============================================================
     # VISUALIZATION
-    # ==============================================================
 
     custom_palette = ["#c4452f", "#6b705c"]  # red = less flexible, green-gray = more flexible
 
@@ -252,9 +240,17 @@ with tab2:
 
         # --- Bar chart ---
         fig_sim = px.bar(
-            sim, x="Year", y="Change_%", color="Flexibility_Index",
-            title="Simulated Change in H-1B Applications by Employer Flexibility",
-            labels={"Change_%":"Change (%)","Flexibility_Index":"Flexibility Index"}
+            sim,
+            x="Year",
+            y="Change_%",
+            color="Flex_Group",
+            barmode="group",
+            labels={
+                "Change_%": "Change (%)",
+                "Flex_Group": "Employer Flexibility",
+                "Year": "Year"
+            },
+            color_discrete_sequence=custom_palette,
         )
 
         fig_sim.update_layout(
@@ -289,7 +285,7 @@ with tab2:
 
         st.plotly_chart(fig_sim, use_container_width=True)
 
-        # --- Projected range summary just below the chart ---
+        # --- Projected range summary right below the chart ---
         st.markdown(
             f"""
             <div style="text-align:center; font-family:Georgia; color:#2b2b2b; margin-top:-25px;">
@@ -307,51 +303,119 @@ with tab2:
             unsafe_allow_html=True
         )
 
+        # --- Analytical paragraph below chart ---
         st.markdown("""
-        *Chart 4 – Fee Impact Simulation:*  
-        Bars represent percentage change in applications per year, shaded by employer flexibility.  
-        Darker colors = higher flexibility = smaller decline.  
-        This visualization quantifies how adaptable employers cushion the effect of rising fees.
+        The simulation indicates that the decline in H-1B applications resulting from fee increases varies systematically across employers.
+        Firms characterized by higher flexibility show a significantly smaller reduction in application volume, suggesting that adaptive capacity enables them to absorb policy-induced cost pressures more effectively.
+        This pattern reveals a structural asymmetry in the labor market response: while less flexible employers retract sharply in the face of rising costs, more adaptable organizations maintain a steadier level of engagement.
+        Such heterogeneity underscores the importance of organizational adaptability as a moderating factor in policy transmission and highlights how fee-based interventions can have uneven effects across employer types.
         """)
         st.markdown("<br>", unsafe_allow_html=True)
 
-    # --- Sector Analysis ---
-    st.markdown("### Sector-Level Evidence from H-1B Data")
+    # SECTOR ANALYSIS
+
+    st.markdown("""
+    <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
+        <div style="font-size:22px; font-weight:bold; margin-bottom:2px;">
+            Industries that diversify visa channels—like Finance and Technology—absorb cost shocks far better than sectors dependent solely on H-1B sponsorship.
+        </div>
+        <div style="font-size:18px; font-style:italic; margin-top:2px;">
+            Sector-Level Evidence from H-1B Data
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # --- Sector mapping ---
     df["NAICS2"] = (df["NAICS"].astype(str).str[:2]).astype(int)
     naics_map = {
-        51:"Technology (Information)",52:"Finance/Insurance",54:"Professional/Consulting",
-        55:"Management of Companies",61:"Education",62:"Healthcare/Social Assistance",
-        31:"Manufacturing",32:"Manufacturing",33:"Manufacturing"
+        51: "Technology (Information)",
+        52: "Finance/Insurance",
+        54: "Professional/Consulting",
+        55: "Management of Companies",
+        61: "Education",
+        62: "Healthcare/Social Assistance",
+        31: "Manufacturing",
+        32: "Manufacturing",
+        33: "Manufacturing",
     }
     df["Sector"] = df["NAICS2"].map(naics_map).fillna("Other")
 
+    # --- Aggregate and normalize ---
     sector_summary = (
         df.groupby("Sector")
-        .agg(Total_Approvals=("Total_Approvals","sum"),
-             mean_flex=("Flexibility_Index","mean"),
-             share_opt=("OPT_friendly","mean"),
-             share_cpt=("CPT_friendly","mean"),
-             share_f500=("Fortune500","mean"))
+        .agg(
+            Total_Approvals=("Total_Approvals", "sum"),
+            mean_flex=("Flexibility_Index", "mean"),
+            share_opt=("OPT_friendly", "mean"),
+            share_cpt=("CPT_friendly", "mean"),
+            share_f500=("Fortune500", "mean"),
+        )
         .reset_index()
     )
 
-    for col in ["mean_flex","share_opt","share_cpt","share_f500"]:
-        denom = (sector_summary[col].max()-sector_summary[col].min()) or 1e-9
-        sector_summary[col+"_norm"]=(sector_summary[col]-sector_summary[col].min())/denom
-    sector_summary["adaptive_score"]=sector_summary[
-        ["mean_flex_norm","share_opt_norm","share_cpt_norm","share_f500_norm"]
+    for col in ["mean_flex", "share_opt", "share_cpt", "share_f500"]:
+        denom = (sector_summary[col].max() - sector_summary[col].min()) or 1e-9
+        sector_summary[col + "_norm"] = (sector_summary[col] - sector_summary[col].min()) / denom
+
+    sector_summary["adaptive_score"] = sector_summary[
+        ["mean_flex_norm", "share_opt_norm", "share_cpt_norm", "share_f500_norm"]
     ].mean(axis=1)
 
-    top_approvals=sector_summary.sort_values("Total_Approvals",ascending=False).head(10)
-    top_adapt=sector_summary.sort_values("adaptive_score",ascending=False).head(10)
+    # --- Top 10 sectors ---
+    top_approvals = sector_summary.sort_values("Total_Approvals", ascending=True).tail(10)
+    top_adapt = sector_summary.sort_values("adaptive_score", ascending=True).tail(10)
 
-    col1,col2=st.columns(2)
+    # --- Theme colors ---
+    color_approvals = "#4DB6AC"  # teal
+    color_adaptive = "#E4A672"   # warm tan
+
+    # --- CLEAN HORIZONTAL BAR VISUALIZATION ---
+
+    col1, col2 = st.columns(2)
+
+    # Calculate a threshold for "short" bars (10% of the max value)
+    threshold_approvals = top_approvals["Total_Approvals"].max() * 0.1
+    threshold_adaptive = top_adapt["adaptive_score"].max() * 0.1
+
+    # Create dynamic position lists
+    positions_approvals = [
+        "inside" if x > threshold_approvals else "outside"
+        for x in top_approvals["Total_Approvals"]
+    ]
+
+    positions_adaptive = [
+        "inside" if x > threshold_adaptive else "outside"
+        for x in top_adapt["adaptive_score"]
+    ]
+
     with col1:
-        st.plotly_chart(
-            px.bar(top_approvals,x="Sector",y="Total_Approvals",text_auto=True,
-                   title="Top Sectors by H-1B Approvals",
-                   color_discrete_sequence=["#4DB6AC"]).update_layout(template="plotly_dark"),
-            use_container_width=True)
+        fig_approvals = px.bar(
+            top_approvals,
+            y="Sector",
+            x="Total_Approvals",
+            text="Total_Approvals",
+            orientation="h",
+            color_discrete_sequence=[color_approvals],
+            labels={"Total_Approvals": "Total Approvals", "Sector": ""},
+            title="<b>Top Sectors by H-1B Approvals</b>",
+        )
+        fig_approvals.update_traces(
+            texttemplate="%{x:,.0f}",
+            textposition=positions_approvals,
+            marker_line_color="#2b2b2b",
+            marker_line_width=0.8,
+        )
+        fig_approvals.update_layout(
+            template="simple_white",
+            font=dict(family="Georgia", color="#2b2b2b"),
+            yaxis=dict(title="", showgrid=False, showticklabels=True),
+            xaxis=dict(title="", showgrid=True, gridcolor="rgba(0,0,0,0.05)", visible=False),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            margin=dict(t=70, b=60, l=20, r=40),
+        )
+        st.plotly_chart(fig_approvals, use_container_width=True)
+
     with col2:
         fig_adaptive = px.bar(
             top_adapt,
@@ -366,7 +430,7 @@ with tab2:
 
         fig_adaptive.update_traces(
             texttemplate="%{x:.2f}",
-            textposition="outside",
+            textposition=positions_adaptive,
             textfont=dict(family="Georgia", size=14, color="#2b2b2b"),
             marker_line_color="#2b2b2b",
             marker_line_width=0.8,
@@ -384,19 +448,26 @@ with tab2:
         )
         st.plotly_chart(fig_adaptive, use_container_width=True)
 
-    st.markdown("""
-    The sectoral analysis reveals a clear structural asymmetry in how industries within the U.S. high-skill labor market absorb policy-induced cost shocks. Sectors dominated by **Professional and Consulting Services**, while accounting for the majority of H-1B petition volume, display limited adaptive capacity and heavy reliance on formal sponsorship mechanisms. This concentration of applications among a few large consulting employers reflects a growth model dependent on predictable visa access rather than internal flexibility or workforce diversification. Consequently, such industries are disproportionately exposed to fee-related policy changes and are likely to experience sharper contractions when sponsorship costs rise.  
+    # --- Analytical narrative paragraph ---
+    st.markdown(
+        """
+        <div style="margin-top:-25px; font-family:Georgia; color:#2b2b2b; font-size:16px; line-height:1.55;">
+        The sectoral analysis reveals a clear structural asymmetry in how industries within the U.S. high-skill labor market absorb policy-induced cost shocks. Sectors dominated by <b>Professional and Consulting Services</b>, while accounting for the majority of H-1B petition volume, display limited adaptive capacity and heavy reliance on formal sponsorship mechanisms. This concentration of applications among a few large consulting employers reflects a growth model dependent on predictable visa access rather than internal flexibility or workforce diversification. Consequently, such industries are disproportionately exposed to fee-related policy changes and are likely to experience sharper contractions when sponsorship costs rise.<br><br>
 
-    In contrast, **Finance/Insurance** and **Technology (Information)** sectors exhibit both high participation and elevated adaptive scores, suggesting that firms in these fields possess institutional mechanisms to redistribute or retain talent across alternative authorizations such as **OPT** and **CPT**. These sectors demonstrate a more dynamic response structure, capable of adjusting human-capital strategies without entirely reducing their foreign-talent footprint. The pattern indicates that fee shocks do not uniformly suppress demand for international professionals but instead **reallocate sponsorship demand toward sectors with greater organizational flexibility and diversified visa portfolios**.  
+        In contrast, <b>Finance/Insurance</b> and <b>Technology (Information)</b> sectors exhibit both high participation and elevated adaptive scores, suggesting that firms in these fields possess institutional mechanisms to redistribute or retain talent across alternative authorizations such as <b>OPT</b> and <b>CPT</b>. These sectors demonstrate a more dynamic response structure, capable of adjusting human-capital strategies without entirely reducing their foreign-talent footprint. The pattern indicates that fee shocks do not uniformly suppress demand for international professionals but instead <b>reallocate sponsorship demand toward sectors with greater organizational flexibility and diversified visa portfolios</b>.<br><br>
 
-    Taken together, the evidence underscores that resilience in the post-study employment ecosystem stems not merely from scale or petition volume but from **institutional adaptability and portfolio diversity**. Industries capable of leveraging multiple visa pathways are better positioned to sustain innovation and competitiveness, even under more restrictive or costly sponsorship regimes. Such adaptability represents an emerging structural advantage in the evolving landscape of global talent mobility and high-skill immigration policy.
-    """)
+        Taken together, the evidence underscores that resilience in the post-study employment ecosystem stems not merely from scale or petition volume but from <b>institutional adaptability and portfolio diversity</b>. Industries capable of leveraging multiple visa pathways are better positioned to sustain innovation and competitiveness, even under more restrictive or costly sponsorship regimes. Such adaptability represents an emerging structural advantage in the evolving landscape of global talent mobility and high-skill immigration policy.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.markdown(f"""
     ### Key Findings
-    - Raising H-1B cost to **USD {fee_usd:,}** (~{alpha*100:.0f}% above baseline) reduces applications ≈ **{abs(projected_change):.1f}%**.  
-    - Employers with broad visa portfolios offset this via OPT/CPT.  
-    - **Technology and Finance** are most adaptive; **Consulting** leads by volume but faces adjustment risk.
+    - Raising the H-1B sponsorship cost to **USD {fee_usd:,}** (~{alpha*100:.0f}% above baseline) leads to an estimated reduction in applications of **{abs(projected_change_high):.1f}% to {abs(projected_change_low):.1f}%**, depending on employer flexibility.  
+    - The distributional pattern of these adjustments indicates that sectors with **diversified visa portfolios**—notably **Finance** and **Technology**—are better positioned to sustain talent flows under cost escalation.  
+    - Conversely, sectors characterized by **structural dependence on the H-1B channel**, such as **Consulting**, face steeper contraction risks and limited substitutability.  
+    - These dynamics illustrate that adaptability, rather than scale, serves as the key determinant of resilience in the post-study employment ecosystem.
     """)
 
     st.session_state.fee_usd = fee_usd
