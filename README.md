@@ -130,7 +130,7 @@ These outputs allow transparent validation of all simulation and visualization r
 
 ## 📈 Key Insights (verified)
 
-- **Demand is persistent:** H-1B applications remain strong through 2015–2023, peaking in 2023.  
+- **Demand is persistent:** H-1B applications remain strong through 2015–2023.  
 - **Sponsorship is concentrated:** Large consulting/IT and tech firms account for most filings.  
 - **Adaptive pathways:** **CPT-friendly** participation increases modestly; **OPT trend is not observable** due to name-matching limitations.  
 - **Fee sensitivity:** At ε = −0.3 and a +300 % fee rise (USD 25 000 → 100 000), projected change ≈ **−90 %**.  
