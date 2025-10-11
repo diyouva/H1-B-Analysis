@@ -146,33 +146,99 @@ with tab1:
 with tab2:
     st.header("Simulation of a USD 100 000 H-1B Fee")
 
+    # --- Baseline setup ---
     baseline_fee = 25_000
     st.markdown("""
     **Interactive Filters**  
-    Use the sliders below to test different H-1B fee levels and elasticity assumptions.  
-    The results will update automatically to show how sensitive total applications are to these parameters.
+    Use the sliders below to test different H-1B fee levels and employer responsiveness.  
+    The chart dynamically illustrates how flexibility affects the magnitude of the decline in applications.
     """)
-    fee_usd = st.slider("Set total H-1B sponsorship cost (USD)",5_000,100_000,25_000,step=5_000)
-    elasticity = st.slider("Elasticity (Responsiveness)",-1.0,0.0,-0.3,step=0.05)
+
+    # --- User inputs ---
+    fee_usd = st.slider(
+        "Set total H-1B sponsorship cost (USD)",
+        5_000, 100_000, 25_000, step=5_000
+    )
+
+    elasticity = st.slider(
+        "Average Elasticity (Responsiveness, ε)",
+        -1.0, 0.0, -0.3, step=0.05,
+        help="Overall responsiveness of employers to fee changes"
+    )
+
+    # --- Automatically create heterogeneity ---
+    elasticity_gap = 0.15  # how much low/high differ from average
+    elasticity_low = max(-1.0, elasticity - elasticity_gap)   # less flexible employers
+    elasticity_high = min(0.0, elasticity + elasticity_gap)   # more flexible employers
+
+    # --- Compute proportional fee change ---
     alpha = (fee_usd - baseline_fee) / baseline_fee
-    sim = simulate_fee_change(df, alpha=alpha, elasticity=elasticity)
-    projected_change = elasticity * alpha * 100
 
-    st.markdown(f"""
-    **Simulation Parameters:**  
-    Baseline = ${baseline_fee:,} | New Fee = ${fee_usd:,} | Fee Change = {alpha*100:.1f}% | Elasticity = {elasticity}
-    """)
+    # --- Run simulation with heterogeneous elasticity ---
+    sim = simulate_fee_change(
+        df,
+        alpha=alpha,
+        elasticity_low=elasticity_low,
+        elasticity_high=elasticity_high
+    )
 
-    # --- Custom warm palette ---
+    # ==============================================================
+    # TWO-COLUMN PARAMETER SUMMARY
+    # ==============================================================
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown(
+            f"""
+            <div style="font-family:Georgia; color:#2b2b2b; font-size:16px;">
+                <b>Policy Inputs</b><br>
+                <ul style="margin-top:5px; line-height:1.6;">
+                    <li><b>Baseline Fee:</b> ${baseline_fee:,.0f}</li>
+                    <li><b>New Fee:</b> ${fee_usd:,.0f}</li>
+                    <li><b>Fee Change (α):</b> {alpha*100:.1f}%</li>
+                </ul>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    with col2:
+        st.markdown(
+            f"""
+            <div style="font-family:Georgia; color:#2b2b2b; font-size:16px;">
+                <b>Elasticity (ε)</b><br>
+                <ul style="margin-top:5px; line-height:1.6;">
+                    <li><b>Less Flexible:</b> {elasticity_low:.2f}</li>
+                    <li><b>More Flexible:</b> {elasticity_high:.2f}</li>
+                </ul>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    # Optional divider line
+    st.markdown("<hr style='margin-top:0px; margin-bottom:20px;'>", unsafe_allow_html=True)
+
+    # --- Optional summary metric ---
+    projected_change_low = elasticity_low * alpha * 100
+    projected_change_high = elasticity_high * alpha * 100
+    st.metric(
+        label="Projected Change Range (Δ Applications, %)",
+        value=f"{projected_change_high:.1f}% to {projected_change_low:.1f}%",
+        help="Expected reduction in applications from more vs. less flexible employers"
+    )
+
+    # ==============================================================
+    # VISUALIZATION
+    # ==============================================================
     custom_palette = ["#c4452f", "#6b705c"]  # red = less flexible, green-gray = more flexible
 
-    # --- Visualization using heterogeneous elasticity simulation result ---
     if "Year" in sim.columns and "Flex_Group" in sim.columns:
         fig_sim = px.bar(
             sim,
             x="Year",
             y="Change_%",
-            color="Flex_Group",       # use the new categorical group
+            color="Flex_Group",
             barmode="group",
             labels={
                 "Change_%": "Change (%)",
@@ -182,7 +248,7 @@ with tab2:
             color_discrete_sequence=custom_palette,
         )
 
-        # --- Centered two-line title ---
+        # --- Title and layout ---
         fig_sim.update_layout(
             title=dict(
                 text=(
@@ -201,7 +267,7 @@ with tab2:
             font=dict(family="Georgia", color="#2b2b2b"),
             xaxis_title="",
             yaxis_title=None,
-            legend_title_text="Employer Type",
+            legend_title_text="",  # remove legend title
             legend=dict(
                 orientation="h",
                 yanchor="bottom",
@@ -217,16 +283,14 @@ with tab2:
             margin=dict(t=120, b=60, l=30, r=30),
         )
 
-        # --- Remove y-axis clutter ---
+        # --- Axis and label cleanup ---
         fig_sim.update_yaxes(visible=False, showticklabels=False, showgrid=False, zeroline=False)
         fig_sim.update_xaxes(showgrid=False, linecolor="rgba(0,0,0,0.3)", tickfont=dict(size=14))
-
-        # --- Add percentage labels ---
         fig_sim.update_traces(
             texttemplate="%{y:.1f}%",
             textposition="outside",
             textfont=dict(family="Georgia", size=14, color="#2b2b2b"),
-            cliponaxis=False  # prevents label clipping
+            cliponaxis=False
         )
 
         st.plotly_chart(fig_sim, use_container_width=True)
