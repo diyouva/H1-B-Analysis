@@ -187,7 +187,7 @@ with tab2:
     projected_change_high = elasticity_high * alpha * 100
 
     # TWO-COLUMN PARAMETER SUMMARY
-    
+
     col1, col2 = st.columns(2)
 
     with col1:
@@ -434,12 +434,18 @@ with tab2:
         st.plotly_chart(fig_adaptive, use_container_width=True)
 
     # --- Analytical narrative paragraph ---
-    st.markdown("""
-    The sectoral analysis reveals a clear structural asymmetry in how industries within the U.S. high-skill labor market absorb policy-induced cost shocks. Sectors dominated by **Professional and Consulting Services**, while accounting for the majority of H-1B petition volume, display limited adaptive capacity and heavy reliance on formal sponsorship mechanisms. This concentration of applications among a few large consulting employers reflects a growth model dependent on predictable visa access rather than internal flexibility or workforce diversification. Consequently, such industries are disproportionately exposed to fee-related policy changes and are likely to experience sharper contractions when sponsorship costs rise.  
+    st.markdown(
+        """
+        <div style="margin-top:-25px; font-family:Georgia; color:#2b2b2b; font-size:16px; line-height:1.55;">
+        The sectoral analysis reveals a clear structural asymmetry in how industries within the U.S. high-skill labor market absorb policy-induced cost shocks. Sectors dominated by <b>Professional and Consulting Services</b>, while accounting for the majority of H-1B petition volume, display limited adaptive capacity and heavy reliance on formal sponsorship mechanisms. This concentration of applications among a few large consulting employers reflects a growth model dependent on predictable visa access rather than internal flexibility or workforce diversification. Consequently, such industries are disproportionately exposed to fee-related policy changes and are likely to experience sharper contractions when sponsorship costs rise.<br><br>
 
-    In contrast, **Finance/Insurance** and **Technology (Information)** sectors exhibit both high participation and elevated adaptive scores, suggesting that firms in these fields possess institutional mechanisms to redistribute or retain talent across alternative authorizations such as **OPT** and **CPT**. These sectors demonstrate a more dynamic response structure, capable of adjusting human-capital strategies without entirely reducing their foreign-talent footprint. The pattern indicates that fee shocks do not uniformly suppress demand for international professionals but instead **reallocate sponsorship demand toward sectors with greater organizational flexibility and diversified visa portfolios**.  
+        In contrast, <b>Finance/Insurance</b> and <b>Technology (Information)</b> sectors exhibit both high participation and elevated adaptive scores, suggesting that firms in these fields possess institutional mechanisms to redistribute or retain talent across alternative authorizations such as <b>OPT</b> and <b>CPT</b>. These sectors demonstrate a more dynamic response structure, capable of adjusting human-capital strategies without entirely reducing their foreign-talent footprint. The pattern indicates that fee shocks do not uniformly suppress demand for international professionals but instead <b>reallocate sponsorship demand toward sectors with greater organizational flexibility and diversified visa portfolios</b>.<br><br>
 
-    Taken together, the evidence underscores that resilience in the post-study employment ecosystem stems not merely from scale or petition volume but from **institutional adaptability and portfolio diversity**. Industries capable of leveraging multiple visa pathways are better positioned to sustain innovation and competitiveness, even under more restrictive or costly sponsorship regimes. Such adaptability represents an emerging structural advantage in the evolving landscape of global talent mobility and high-skill immigration policy.""")
+        Taken together, the evidence underscores that resilience in the post-study employment ecosystem stems not merely from scale or petition volume but from <b>institutional adaptability and portfolio diversity</b>. Industries capable of leveraging multiple visa pathways are better positioned to sustain innovation and competitiveness, even under more restrictive or costly sponsorship regimes. Such adaptability represents an emerging structural advantage in the evolving landscape of global talent mobility and high-skill immigration policy.
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.markdown(f"""
     ### Key Findings
