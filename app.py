@@ -163,20 +163,84 @@ with tab2:
     Baseline = ${baseline_fee:,} | New Fee = ${fee_usd:,} | Fee Change = {alpha*100:.1f}% | Elasticity = {elasticity}
     """)
 
-    if "Year" in sim.columns:
+    # --- Custom warm palette ---
+    custom_palette = ["#c4452f", "#6b705c"]  # red = less flexible, green-gray = more flexible
+
+    # --- Visualization using heterogeneous elasticity simulation result ---
+    if "Year" in sim.columns and "Flex_Group" in sim.columns:
         fig_sim = px.bar(
-            sim, x="Year", y="Change_%", color="Flexibility_Index",
-            title="Simulated Change in H-1B Applications by Employer Flexibility",
-            labels={"Change_%":"Change (%)","Flexibility_Index":"Flexibility Index"}
+            sim,
+            x="Year",
+            y="Change_%",
+            color="Flex_Group",       # use the new categorical group
+            barmode="group",
+            labels={
+                "Change_%": "Change (%)",
+                "Flex_Group": "Employer Flexibility",
+                "Year": "Year"
+            },
+            color_discrete_sequence=custom_palette,
         )
-        fig_sim.update_layout(template="plotly_dark")
+
+        # --- Centered two-line title ---
+        fig_sim.update_layout(
+            title=dict(
+                text=(
+                    "<span style='font-size:22px; font-family:Georgia; font-weight:bold;'>"
+                    "Employers with greater flexibility exhibit smaller declines in H-1B applications under rising fees."
+                    "</span><br>"
+                    "<span style='font-size:18px; font-family:Georgia; font-weight:bold; font-style:italic;'>"
+                    "Simulated Change in H-1B Applications by Employer Flexibility"
+                    "</span>"
+                ),
+                x=0.5,
+                xanchor="center",
+                y=0.95
+            ),
+            template="simple_white",
+            font=dict(family="Georgia", color="#2b2b2b"),
+            xaxis_title="",
+            yaxis_title=None,
+            legend_title_text="Employer Type",
+            legend=dict(
+                orientation="h",
+                yanchor="bottom",
+                y=1.02,
+                xanchor="center",
+                x=0.5,
+                bgcolor="rgba(0,0,0,0)",
+                bordercolor="rgba(0,0,0,0)"
+            ),
+            paper_bgcolor="rgba(0,0,0,0)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            bargap=0.25,
+            margin=dict(t=120, b=60, l=30, r=30),
+        )
+
+        # --- Remove y-axis clutter ---
+        fig_sim.update_yaxes(visible=False, showticklabels=False, showgrid=False, zeroline=False)
+        fig_sim.update_xaxes(showgrid=False, linecolor="rgba(0,0,0,0.3)", tickfont=dict(size=14))
+
+        # --- Add percentage labels ---
+        fig_sim.update_traces(
+            texttemplate="%{y:.1f}%",
+            textposition="outside",
+            textfont=dict(family="Georgia", size=14, color="#2b2b2b"),
+            cliponaxis=False  # prevents label clipping
+        )
+
         st.plotly_chart(fig_sim, use_container_width=True)
+    # if "Year" in sim.columns:
+    #     fig_sim = px.bar(
+    #         sim, x="Year", y="Change_%", color="Flexibility_Index",
+    #         title="Simulated Change in H-1B Applications by Employer Flexibility",
+    #         labels={"Change_%":"Change (%)","Flexibility_Index":"Flexibility Index"}
+    #     )
+    #     fig_sim.update_layout(template="plotly_dark")
+    #     st.plotly_chart(fig_sim, use_container_width=True)
 
         st.markdown("""
-        *Chart 4 – Fee Impact Simulation:*  
-        Bars represent percentage change in applications per year, shaded by employer flexibility.  
-        Darker colors = higher flexibility = smaller decline.  
-        This visualization quantifies how adaptable employers cushion the effect of rising fees.
+        The simulation indicates that the decline in H-1B applications resulting from fee increases varies systematically across employers. Firms characterized by higher flexibility show a significantly smaller reduction in application volume, suggesting that adaptive capacity enables them to absorb policy-induced cost pressures more effectively. This pattern reveals a structural asymmetry in the labor market response: while less flexible employers retract sharply in the face of rising costs, more adaptable organizations maintain a steadier level of engagement. Such heterogeneity underscores the importance of organizational adaptability as a moderating factor in policy transmission and highlights how fee-based interventions can have uneven effects across employer types.
         """)
 
     # --- Sector Analysis ---
