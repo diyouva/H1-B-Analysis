@@ -315,26 +315,48 @@ with tab2:
         """)
 
     # ==============================================================
-    # SECTOR ANALYSIS – ADAPTABILITY
+    # SECTOR ANALYSIS – CLEAN HORIZONTAL VISUALS + PUNCHLINE
     # ==============================================================
-    st.markdown("---")
-    st.markdown("### Sector-Level Evidence from H-1B Data")
 
+    # --- Space before title (visual separation) ---
+    st.markdown("<br><br>", unsafe_allow_html=True)
+
+    st.markdown("""
+    <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
+        <div style="font-size:22px; font-weight:bold; margin-bottom:2px;">
+            Industries that diversify visa channels—like Finance and Technology—absorb cost shocks far better than sectors dependent solely on H-1B sponsorship.
+        </div>
+        <div style="font-size:18px; font-style:italic; margin-top:2px;">
+            Sector-Level Evidence from H-1B Data
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # --- Sector mapping ---
     df["NAICS2"] = (df["NAICS"].astype(str).str[:2]).astype(int)
     naics_map = {
-        51: "Technology (Information)", 52: "Finance/Insurance", 54: "Professional/Consulting",
-        55: "Management of Companies", 61: "Education", 62: "Healthcare/Social Assistance",
-        31: "Manufacturing", 32: "Manufacturing", 33: "Manufacturing"
+        51: "Technology (Information)",
+        52: "Finance/Insurance",
+        54: "Professional/Consulting",
+        55: "Management of Companies",
+        61: "Education",
+        62: "Healthcare/Social Assistance",
+        31: "Manufacturing",
+        32: "Manufacturing",
+        33: "Manufacturing",
     }
     df["Sector"] = df["NAICS2"].map(naics_map).fillna("Other")
 
+    # --- Aggregate and normalize ---
     sector_summary = (
         df.groupby("Sector")
-        .agg(Total_Approvals=("Total_Approvals", "sum"),
-             mean_flex=("Flexibility_Index", "mean"),
-             share_opt=("OPT_friendly", "mean"),
-             share_cpt=("CPT_friendly", "mean"),
-             share_f500=("Fortune500", "mean"))
+        .agg(
+            Total_Approvals=("Total_Approvals", "sum"),
+            mean_flex=("Flexibility_Index", "mean"),
+            share_opt=("OPT_friendly", "mean"),
+            share_cpt=("CPT_friendly", "mean"),
+            share_f500=("Fortune500", "mean"),
+        )
         .reset_index()
     )
 
@@ -346,57 +368,93 @@ with tab2:
         ["mean_flex_norm", "share_opt_norm", "share_cpt_norm", "share_f500_norm"]
     ].mean(axis=1)
 
-    top_approvals = sector_summary.sort_values("Total_Approvals", ascending=False).head(10)
-    top_adapt = sector_summary.sort_values("adaptive_score", ascending=False).head(10)
+    # --- Top 10 sectors ---
+    top_approvals = sector_summary.sort_values("Total_Approvals", ascending=True).tail(10)
+    top_adapt = sector_summary.sort_values("adaptive_score", ascending=True).tail(10)
 
+    # --- Theme colors ---
+    color_approvals = "#4DB6AC"  # teal
+    color_adaptive = "#E4A672"   # warm tan
+
+    # ==============================================================
+    # CLEAN HORIZONTAL BAR VISUALIZATION
+    # ==============================================================
     col1, col2 = st.columns(2)
 
     with col1:
-        fig1 = px.bar(
+        fig_approvals = px.bar(
             top_approvals,
             y="Sector",
             x="Total_Approvals",
+            text="Total_Approvals",
             orientation="h",
-            text_auto=".2s",
-            title="Top Sectors by H-1B Approvals",
-            color_discrete_sequence=["#4DB6AC"]
+            color_discrete_sequence=[color_approvals],
+            labels={"Total_Approvals": "Total Approvals", "Sector": ""},
+            title="<b>Top Sectors by H-1B Approvals</b>",
         )
-        fig1.update_layout(
+        fig_approvals.update_traces(
+            texttemplate="%{x:,.0f}",
+            textposition="outside",
+            marker_line_color="#2b2b2b",
+            marker_line_width=0.8,
+        )
+        fig_approvals.update_layout(
             template="simple_white",
             font=dict(family="Georgia", color="#2b2b2b"),
-            yaxis_title="",
-            xaxis_title="",
-            margin=dict(l=100, r=30, t=60, b=30)
+            yaxis=dict(title="", showgrid=False, showticklabels=True),
+            xaxis=dict(title="", showgrid=True, gridcolor="rgba(0,0,0,0.05)", visible=False),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            margin=dict(t=70, b=60, l=20, r=40),
         )
-        fig1.update_yaxes(showgrid=False)
-        st.plotly_chart(fig1, use_container_width=True)
+        st.plotly_chart(fig_approvals, use_container_width=True)
 
     with col2:
-        fig2 = px.bar(
+        fig_adaptive = px.bar(
             top_adapt,
             y="Sector",
             x="adaptive_score",
+            text="adaptive_score",
             orientation="h",
-            text_auto=".2f",
-            title="Top Sectors by Adaptive Score",
-            color_discrete_sequence=["#E4A672"]
+            color_discrete_sequence=[color_adaptive],
+            labels={"adaptive_score": "Adaptive Score", "Sector": ""},
+            title="<b>Top Sectors by Adaptive Score</b>",
         )
-        fig2.update_layout(
+
+        fig_adaptive.update_traces(
+            texttemplate="%{x:.2f}",
+            textposition="outside",
+            textfont=dict(family="Georgia", size=14, color="#2b2b2b"),
+            marker_line_color="#2b2b2b",
+            marker_line_width=0.8,
+            cliponaxis=False,  # ✅ prevents cutoff
+        )
+
+        fig_adaptive.update_layout(
             template="simple_white",
             font=dict(family="Georgia", color="#2b2b2b"),
-            yaxis_title="",
-            xaxis_title="",
-            margin=dict(l=100, r=30, t=60, b=30)
+            yaxis=dict(title="", showgrid=False, showticklabels=True),
+            xaxis=dict(title="", showgrid=True, gridcolor="rgba(0,0,0,0.05)", visible=False),
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            margin=dict(t=70, b=60, l=20, r=120),  # ✅ add more right margin
         )
-        fig2.update_yaxes(showgrid=False)
-        st.plotly_chart(fig2, use_container_width=True)
+        st.plotly_chart(fig_adaptive, use_container_width=True)
 
     # --- Analytical narrative paragraph ---
     st.markdown("""
-    The sectoral results reveal a divergence in how industries absorb cost shocks within the U.S. high-skill labor market.
-    While **Professional and Consulting Services** dominate overall H-1B petition volumes, their relatively low adaptive score indicates structural rigidity and dependence on formal sponsorship channels.
-    In contrast, **Finance/Insurance** and **Technology (Information)** exhibit higher adaptability, reflecting institutional capacity to redistribute foreign talent through alternative pathways such as OPT and CPT.
-    This divergence suggests that fee increases are unlikely to produce uniform contraction across industries; rather, they will induce a **reallocation of sponsorship demand** from cost-sensitive to flexibility-intensive sectors—reshaping the geography of skilled labor resilience in the United States.
+    The sectoral analysis reveals a clear structural asymmetry in how industries within the U.S. high-skill labor market absorb policy-induced cost shocks. Sectors dominated by **Professional and Consulting Services**, while accounting for the majority of H-1B petition volume, display limited adaptive capacity and heavy reliance on formal sponsorship mechanisms. This concentration of applications among a few large consulting employers reflects a growth model dependent on predictable visa access rather than internal flexibility or workforce diversification. Consequently, such industries are disproportionately exposed to fee-related policy changes and are likely to experience sharper contractions when sponsorship costs rise.  
+
+    In contrast, **Finance/Insurance** and **Technology (Information)** sectors exhibit both high participation and elevated adaptive scores, suggesting that firms in these fields possess institutional mechanisms to redistribute or retain talent across alternative authorizations such as **OPT** and **CPT**. These sectors demonstrate a more dynamic response structure, capable of adjusting human-capital strategies without entirely reducing their foreign-talent footprint. The pattern indicates that fee shocks do not uniformly suppress demand for international professionals but instead **reallocate sponsorship demand toward sectors with greater organizational flexibility and diversified visa portfolios**.  
+
+    Taken together, the evidence underscores that resilience in the post-study employment ecosystem stems not merely from scale or petition volume but from **institutional adaptability and portfolio diversity**. Industries capable of leveraging multiple visa pathways are better positioned to sustain innovation and competitiveness, even under more restrictive or costly sponsorship regimes. Such adaptability represents an emerging structural advantage in the evolving landscape of global talent mobility and high-skill immigration policy.""")
+
+    st.markdown(f"""
+    ### Key Findings
+    - Raising the H-1B sponsorship cost to **USD {fee_usd:,}** (~{alpha*100:.0f}% above baseline) leads to an estimated reduction in applications of **{abs(projected_change_high):.1f}% to {abs(projected_change_low):.1f}%**, depending on employer flexibility.  
+    - The distributional pattern of these adjustments indicates that sectors with **diversified visa portfolios**—notably **Finance** and **Technology**—are better positioned to sustain talent flows under cost escalation.  
+    - Conversely, sectors characterized by **structural dependence on the H-1B channel**, such as **Consulting**, face steeper contraction risks and limited substitutability.  
+    - These dynamics illustrate that adaptability, rather than scale, serves as the key determinant of resilience in the post-study employment ecosystem.
     """)
 
     st.session_state.fee_usd = fee_usd
