@@ -1,4 +1,4 @@
-# 🎓 Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock
+## 🎓 Modeling Post-Study Work Pathways: H-1B, OPT, and CPT under Policy Shock
 
 **Author:** Diyouva C. Novith  
 *Carnegie Mellon University – Heinz College of Information Systems and Public Policy*  
