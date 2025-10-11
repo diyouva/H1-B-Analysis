@@ -75,24 +75,65 @@ with tab1:
     """)
 
     # --- Chart 1: Baseline trends ---
-    st.markdown("### Descriptive Baseline of H-1B Activity (2015–2023)")
+    st.markdown("""
+    <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
+        <div style="font-size:20px; font-weight:bold; margin-bottom:0px;">
+            Employer reliance on H-1B talent is structural, not situational:
+        </div>
+        <div style="font-size:18px; font-weight:bold; margin-top:0px;">
+            Establishing a stable baseline of inelastic demand before any fee-shock scenario.
+        </div>
+        <div style="font-size:14px; font-style:italic; margin-top:4px;">
+            Descriptive Baseline of H-1B Activity (2015–2023)
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
     yearly = df.groupby("Year")[["Total_Approvals", "Total_Denials"]].sum().reset_index()
+
     fig1 = px.line(
-        yearly, x="Year", y=["Total_Approvals", "Total_Denials"],
+        yearly,
+        x="Year",
+        y=["Total_Approvals", "Total_Denials"],
         markers=True,
         color_discrete_map={"Total_Approvals": "#4DB6AC", "Total_Denials": "#FF6F61"},
-        labels={"value": "Applications", "variable": "Category"},
-        title="H-1B Approvals and Denials by Year"
     )
-    fig1.update_layout(template="plotly_dark")
+
+    # --- Base styling ---
+    fig1.update_layout(
+        showlegend=False,  # ✅ remove legend
+        template="simple_white",
+        font=dict(family="Georgia", color="#2b2b2b"),
+        xaxis_title=None,
+        yaxis_title=None,
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin=dict(t=40, b=40, l=30, r=30),
+    )
+
+    # --- Remove y-axis line ---
+    fig1.update_yaxes(showline=False, showgrid=True, gridcolor="rgba(0,0,0,0.05)")
+    fig1.update_xaxes(showline=False, showgrid=True, gridcolor="rgba(0,0,0,0.05)")
+
+    # --- Add text labels at end of lines ---
+    for trace in fig1.data:
+        last_x = yearly["Year"].iloc[-1]
+        last_y = trace.y[-1]
+        trace_name = trace.name.replace("_", " ")
+        fig1.add_annotation(
+            x=last_x + 0.1,  # a little to the right of last point
+            y=last_y,
+            text=f"<b>{trace_name}</b>",
+            font=dict(family="Georgia", size=14, color=trace.line.color),
+            showarrow=False,
+            xanchor="left",
+            yanchor="middle"
+        )
+
     st.plotly_chart(fig1, use_container_width=True)
 
     st.markdown("""
-    *Chart 1 – H-1B Approvals and Denials (2015–2023):*  
-    The chart shows that overall employer demand for H-1B sponsorship has remained strong and resilient from 2015 to 2023, even as approval and denial rates fluctuated under changing policy conditions.  
-    Approvals rose steadily until 2022, while denials spiked briefly during periods of stricter review.  
-    Despite these fluctuations, the total volume of applications never collapsed, illustrating a **structural dependence on foreign skilled labor**.  
-    This persistence establishes a baseline of **inelastic demand**, supporting later simulations of how only extreme fee increases would meaningfully reduce participation.
+    The historical trend of H-1B approvals and denials underscores a fundamental insight: **employer reliance on foreign skilled labor is deeply structural rather than cyclical**. Even across years marked by shifting policy enforcement, the sustained volume of applications reveals an **inelastic demand** for global talent. Periods of heightened scrutiny produced temporary fluctuations in denials, yet total participation remained resilient—signaling that the H-1B program has become a **core institutional mechanism** within the U.S. innovation economy. This persistent baseline defines the counterfactual against which the subsequent fee-shock simulation measures potential behavioral change.
     """)
 
     # --- Chart 2: Top employers ---
@@ -114,47 +155,49 @@ with tab1:
     This concentration provides the empirical foundation for the **sectoral adaptability analysis** introduced in Tab 2.
     """)
 
-    # --- Chart 3: Employer participation across pathways ---
-    st.subheader("Employer Participation Across Pathways")
-    cat_summary = df.groupby("Year")[["Fortune500", "OPT_friendly", "CPT_friendly"]].sum().reset_index()
-    employers_per_year = df.groupby("Year")["Employer_std"].nunique().reset_index(name="Total_Employers")
-    cat_summary = cat_summary.merge(employers_per_year, on="Year", how="left")
-    for col in ["Fortune500", "OPT_friendly", "CPT_friendly"]:
-        cat_summary[col] = (cat_summary[col] / cat_summary["Total_Employers"]) * 100
+    # # --- Chart 3: Employer participation across pathways ---
+    # st.subheader("Employer Participation Across Pathways")
+    # cat_summary = df.groupby("Year")[["Fortune500", "OPT_friendly", "CPT_friendly"]].sum().reset_index()
+    # employers_per_year = df.groupby("Year")["Employer_std"].nunique().reset_index(name="Total_Employers")
+    # cat_summary = cat_summary.merge(employers_per_year, on="Year", how="left")
+    # for col in ["Fortune500", "OPT_friendly", "CPT_friendly"]:
+    #     cat_summary[col] = (cat_summary[col] / cat_summary["Total_Employers"]) * 100
 
-    fig3 = px.line(
-        cat_summary, x="Year",
-        y=["Fortune500", "OPT_friendly", "CPT_friendly"],
-        markers=True,
-        labels={"value": "Share of Employers (%)", "variable": "Category"},
-        title="Share of Employers by Category (%)"
-    )
-    fig3.update_layout(template="plotly_dark")
-    st.plotly_chart(fig3, use_container_width=True)
+    # fig3 = px.line(
+    #     cat_summary, x="Year",
+    #     y=["Fortune500", "OPT_friendly", "CPT_friendly"],
+    #     markers=True,
+    #     labels={"value": "Share of Employers (%)", "variable": "Category"},
+    #     title="Share of Employers by Category (%)"
+    # )
+    # fig3.update_layout(template="plotly_dark")
+    # st.plotly_chart(fig3, use_container_width=True)
 
-    st.markdown("""
-    *Chart 3 – Employer Participation Across Pathways:*  
-    This line chart tracks the share of employers classified as **Fortune 500**, **OPT-friendly**, or **CPT-friendly** from 2015 to 2023.  
-    Although each line represents a separate category rather than a direct overlap, the simultaneous upward trends—especially among Fortune 500 and CPT-friendly firms—indicate that major employers increasingly engage with **alternative visa pathways** alongside formal H-1B sponsorship.  
-    This broadening participation suggests a gradual institutionalization of flexibility within U.S. hiring practices: firms are diversifying their authorization channels to ensure continued access to international talent amid regulatory or cost uncertainty.  
-    This behavioral pattern provides a conceptual bridge to Tab 2, where elasticity modeling quantifies how such flexibility moderates the impact of fee shocks.
-    """)
+    # st.markdown("""
+    # *Chart 3 – Employer Participation Across Pathways:*  
+    # This line chart tracks the share of employers classified as **Fortune 500**, **OPT-friendly**, or **CPT-friendly** from 2015 to 2023.  
+    # Although each line represents a separate category rather than a direct overlap, the simultaneous upward trends—especially among Fortune 500 and CPT-friendly firms—indicate that major employers increasingly engage with **alternative visa pathways** alongside formal H-1B sponsorship.  
+    # This broadening participation suggests a gradual institutionalization of flexibility within U.S. hiring practices: firms are diversifying their authorization channels to ensure continued access to international talent amid regulatory or cost uncertainty.  
+    # This behavioral pattern provides a conceptual bridge to Tab 2, where elasticity modeling quantifies how such flexibility moderates the impact of fee shocks.
+    # """)
 
 # ==============================================================
 # TAB 2 – SIMULATION & SECTOR RESULTS
 # ==============================================================
 with tab2:
-    st.header("Simulation of a USD 100 000 H-1B Fee")
+    # --- Place dynamic title placeholder FIRST ---
+    title_placeholder = st.empty()
 
     # --- Baseline setup ---
     baseline_fee = 25_000
+
+    # --- User inputs (below the title) ---
     st.markdown("""
     **Interactive Filters**  
     Use the sliders below to test different H-1B fee levels and employer responsiveness.  
     The chart dynamically illustrates how flexibility affects the magnitude of the decline in applications.
     """)
 
-    # --- User inputs ---
     fee_usd = st.slider(
         "Set total H-1B sponsorship cost (USD)",
         5_000, 100_000, 25_000, step=5_000
@@ -166,10 +209,25 @@ with tab2:
         help="Overall responsiveness of employers to fee changes"
     )
 
+    # --- Update the title dynamically ---
+    title_placeholder.markdown(
+        f"""
+        <div style="text-align:center; font-family:Georgia; color:#2b2b2b; margin-top:-25px; margin-bottom:10px;">
+            <div style="font-size:28px; font-weight:bold; margin-bottom:4px;">
+                <br>Simulation of a USD {fee_usd:,.0f} H-1B Fee</br>
+            </div>
+            <div style="font-size:16px; color:#444;">
+                Interactive Policy Sensitivity Model
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
+
     # --- Automatically create heterogeneity ---
     elasticity_gap = 0.15
-    elasticity_low = max(-1.0, elasticity - elasticity_gap)   # less flexible employers
-    elasticity_high = min(0.0, elasticity + elasticity_gap)   # more flexible employers
+    elasticity_low = max(-1.0, elasticity - elasticity_gap)
+    elasticity_high = min(0.0, elasticity + elasticity_gap)
 
     # --- Compute proportional fee change ---
     alpha = (fee_usd - baseline_fee) / baseline_fee
@@ -229,10 +287,10 @@ with tab2:
         # --- Chart title above ---
         st.markdown("""
         <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
-            <div style="font-size:22px; font-weight:bold;">
+            <div style="font-size:20px; font-weight:bold;">
                 Employers with greater flexibility exhibit smaller declines in H-1B applications under rising fees.
             </div>
-            <div style="font-size:18px; font-style:italic; margin-top:2px;">
+            <div style="font-size:14px; font-style:italic; margin-top:2px;">
                 Simulated Change in H-1B Applications by Employer Flexibility
             </div>
         </div>
@@ -289,10 +347,10 @@ with tab2:
         st.markdown(
             f"""
             <div style="text-align:center; font-family:Georgia; color:#2b2b2b; margin-top:-25px;">
-                <div style="font-size:18px; font-weight:bold; margin-bottom:2px;">
+                <div style="font-size:16px; font-weight:bold; margin-bottom:2px;">
                     Projected Change Range (Δ Applications, %)
                 </div>
-                <div style="font-size:32px; font-weight:bold; color:#c4452f; margin-top:-8px; margin-bottom:6px;">
+                <div style="font-size:28px; font-weight:bold; color:#c4452f; margin-top:-8px; margin-bottom:6px;">
                     {projected_change_high:.1f}% to {projected_change_low:.1f}%
                 </div>
                 <div style="font-size:14px; color:#555; margin-top:-2px; margin-bottom:18px;">
@@ -316,10 +374,13 @@ with tab2:
 
     st.markdown("""
     <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
-        <div style="font-size:22px; font-weight:bold; margin-bottom:2px;">
-            Industries that diversify visa channels—like Finance and Technology—absorb cost shocks far better than sectors dependent solely on H-1B sponsorship.
+        <div style="font-size:22px; font-weight:bold; margin-bottom:0px;">
+            Industries that diversify visa channels—like Finance and Technology—
         </div>
-        <div style="font-size:18px; font-style:italic; margin-top:2px;">
+        <div style="font-size:22px; font-weight:bold; margin-top:0px;">
+            absorb cost shocks far better than sectors dependent solely on H-1B sponsorship.
+        </div>
+        <div style="font-size:18px; font-style:italic; margin-top:4px;">
             Sector-Level Evidence from H-1B Data
         </div>
     </div>
@@ -406,6 +467,7 @@ with tab2:
             marker_line_width=0.8,
         )
         fig_approvals.update_layout(
+            title=dict(x=0.5, xanchor="center", yanchor="top"),
             template="simple_white",
             font=dict(family="Georgia", color="#2b2b2b"),
             yaxis=dict(title="", showgrid=False, showticklabels=True),
@@ -438,6 +500,7 @@ with tab2:
         )
 
         fig_adaptive.update_layout(
+            title=dict(x=0.5, xanchor="center", yanchor="top"),
             template="simple_white",
             font=dict(family="Georgia", color="#2b2b2b"),
             yaxis=dict(title="", showgrid=False, showticklabels=True),

@@ -136,24 +136,85 @@ with tab1:
     The historical trend of H-1B approvals and denials underscores a fundamental insight: **employer reliance on foreign skilled labor is deeply structural rather than cyclical**. Even across years marked by shifting policy enforcement, the sustained volume of applications reveals an **inelastic demand** for global talent. Periods of heightened scrutiny produced temporary fluctuations in denials, yet total participation remained resilient—signaling that the H-1B program has become a **core institutional mechanism** within the U.S. innovation economy. This persistent baseline defines the counterfactual against which the subsequent fee-shock simulation measures potential behavioral change.
     """)
 
-    # --- Chart 2: Top employers ---
-    st.subheader("Top Sponsoring Employers (All Years)")
-    top_emp = df.groupby("Employer")[["Total_Approvals"]].sum().nlargest(10, "Total_Approvals").reset_index()
-    fig2 = px.bar(
-        top_emp, x="Employer", y="Total_Approvals", text_auto=True,
-        title="Top 10 H-1B Sponsors (2015–2023)",
-        labels={"Total_Approvals": "Total Approvals"}
-    )
-    fig2.update_layout(xaxis_tickangle=-45, template="plotly_dark")
-    st.plotly_chart(fig2, use_container_width=True)
-
+    # --- CHART 2: HORIZONTAL BAR VERSION (EMPLOYER CONCENTRATION) ---
     st.markdown("""
-    *Chart 2 – Top Employers:*  
-    The bar chart reveals that **H-1B sponsorship is highly concentrated among large consulting and technology firms** such as Cognizant, Tata Consultancy Services, Infosys, Microsoft, and Deloitte.  
-    This concentration pattern shows that the H-1B program is structurally anchored in **knowledge-intensive sectors** reliant on global STEM talent.  
-    The dominance of these firms implies that any future fee shock would disproportionately affect these industries, yet their broad visa management capacity and diversified authorization strategies suggest **lower elasticity**—they can absorb higher costs more effectively than smaller employers.  
-    This concentration provides the empirical foundation for the **sectoral adaptability analysis** introduced in Tab 2.
-    """)
+    <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
+        <div style="font-size:22px; font-weight:bold; margin-bottom:2px;">
+            H-1B sponsorship in the United States is dominated by a handful of large consulting and technology firms—
+            revealing a structurally concentrated and low-elasticity demand for global STEM talent.
+        </div>
+        <div style="font-size:18px; font-style:italic; margin-top:2px; margin-bottom:25px;">
+            Concentration of Sponsorship Among Major Employers
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # --- Data ---
+    top_emp = (
+        df.groupby("Employer")[["Total_Approvals"]]
+        .sum()
+        .nlargest(10, "Total_Approvals")
+        .reset_index()
+    )
+
+    # --- Horizontal bar chart ---
+    fig2 = px.bar(
+        top_emp,
+        y="Employer",
+        x="Total_Approvals",
+        text_auto=".1s",
+        orientation="h",
+        color_discrete_sequence=["#457b9d"],
+    )
+
+    # --- Clean layout ---
+    fig2.update_layout(
+        template="simple_white",
+        font=dict(family="Georgia", color="#2b2b2b"),
+        showlegend=False,
+        yaxis=dict(
+            title=None,
+            showgrid=False,
+            showline=False,
+            tickfont=dict(size=13),
+        ),
+        xaxis=dict(
+            title=None,
+            showgrid=True,
+            gridcolor="rgba(0,0,0,0.05)",
+            showline=False,
+            zeroline=False,
+            tickfont=dict(size=12),
+        ),
+        margin=dict(t=20, b=20, l=0, r=30),
+        height=480,
+    )
+
+    fig2.update_traces(
+        textfont=dict(family="Georgia", size=13, color="white"),
+        textposition="inside",
+        cliponaxis=False,
+    )
+
+    # --- Two-column layout: Text LEFT, Chart RIGHT ---
+    col1, col2 = st.columns([1, 1.3])  # chart slightly wider
+
+    with col1:
+        st.markdown("""
+        <div style="font-family:Georgia; font-size:16px; color:#2b2b2b; line-height:1.6;">
+        The distribution of H-1B approvals underscores a <b>concentration of sponsorship within major consulting and technology firms</b>—
+        notably Cognizant, Tata Consultancy Services, Infosys, Microsoft, and Deloitte.  
+        <br><br>
+        This structural dominance reflects a reliance on <b>knowledge-intensive, globally integrated industries</b> to sustain high-skill labor demand.  
+        While such firms would bear the largest financial exposure to policy changes, their <b>diversified visa portfolios and internal compliance capacity</b> 
+        enable them to absorb fee shocks more effectively than smaller employers.  
+        <br><br>
+        This employer-level concentration serves as a quantitative bridge to the <b>sectoral adaptability analysis</b> explored in Tab 2.
+        </div>
+        """, unsafe_allow_html=True)
+
+    with col2:
+        st.plotly_chart(fig2, use_container_width=True)
 
     # # --- Chart 3: Employer participation across pathways ---
     # st.subheader("Employer Participation Across Pathways")
