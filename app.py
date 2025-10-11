@@ -136,7 +136,7 @@ with tab1:
     The historical trend of H-1B approvals and denials underscores a fundamental insight: **employer reliance on foreign skilled labor is deeply structural rather than cyclical**. Even across years marked by shifting policy enforcement, the sustained volume of applications reveals an **inelastic demand** for global talent. Periods of heightened scrutiny produced temporary fluctuations in denials, yet total participation remained resilient—signaling that the H-1B program has become a **core institutional mechanism** within the U.S. innovation economy. This persistent baseline defines the counterfactual against which the subsequent fee-shock simulation measures potential behavioral change.
     """)
 
-    # --- CHART 2: HORIZONTAL BAR VERSION (EMPLOYER CONCENTRATION) ---
+    # --- CHART 2: HORIZONTAL DESCENDING BAR WITH BALANCED COLUMN HEIGHT ---
     st.markdown("""
     <div style="text-align:center; font-family:Georgia; color:#2b2b2b;">
         <div style="font-size:22px; font-weight:bold; margin-bottom:2px;">
@@ -157,6 +157,9 @@ with tab1:
         .reset_index()
     )
 
+    # ✅ Sort descending (largest on top)
+    top_emp = top_emp.sort_values("Total_Approvals", ascending=True)
+
     # --- Horizontal bar chart ---
     fig2 = px.bar(
         top_emp,
@@ -167,7 +170,7 @@ with tab1:
         color_discrete_sequence=["#457b9d"],
     )
 
-    # --- Clean layout ---
+    # --- Clean visual design ---
     fig2.update_layout(
         template="simple_white",
         font=dict(family="Georgia", color="#2b2b2b"),
@@ -187,7 +190,7 @@ with tab1:
             tickfont=dict(size=12),
         ),
         margin=dict(t=20, b=20, l=0, r=30),
-        height=480,
+        height=520,
     )
 
     fig2.update_traces(
@@ -196,12 +199,12 @@ with tab1:
         cliponaxis=False,
     )
 
-    # --- Two-column layout: Text LEFT, Chart RIGHT ---
-    col1, col2 = st.columns([1, 1.3])  # chart slightly wider
+    # --- Two-column layout (balanced height) ---
+    col1, col2 = st.columns([1, 1.3])
 
     with col1:
         st.markdown("""
-        <div style="font-family:Georgia; font-size:16px; color:#2b2b2b; line-height:1.6;">
+        <div style="font-family:Georgia; font-size:16px; color:#2b2b2b; line-height:1.65;">
         The distribution of H-1B approvals underscores a <b>concentration of sponsorship within major consulting and technology firms</b>—
         notably Cognizant, Tata Consultancy Services, Infosys, Microsoft, and Deloitte.  
         <br><br>
@@ -209,7 +212,12 @@ with tab1:
         While such firms would bear the largest financial exposure to policy changes, their <b>diversified visa portfolios and internal compliance capacity</b> 
         enable them to absorb fee shocks more effectively than smaller employers.  
         <br><br>
-        This employer-level concentration serves as a quantitative bridge to the <b>sectoral adaptability analysis</b> explored in Tab 2.
+        At an institutional level, these firms’ <b>operational resilience</b> demonstrates how globalized corporate structures 
+        mitigate policy volatility through scale, automation, and legal infrastructure. Their capacity to reallocate labor costs across subsidiaries 
+        allows sustained competitiveness even when sponsorship costs rise.  
+        <br><br>
+        This employer-level concentration not only highlights <b>the asymmetry of policy impact</b> within the high-skill labor market 
+        but also serves as a quantitative bridge to the <b>sectoral adaptability analysis</b> explored in Tab 2.
         </div>
         """, unsafe_allow_html=True)
 
