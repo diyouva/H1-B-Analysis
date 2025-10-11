@@ -1,16 +1,16 @@
 [theme]
 base = "light"
-primaryColor = "#c4452f"              # Muted warm red (editorial tone)
-backgroundColor = "#f5f0e8"           # Warm cream background
-secondaryBackgroundColor = "#ffffff"  # White cards
-textColor = "#2b2b2b"                 # Neutral dark gray for readability
-font = "Georgia"                        # Serif for print-style layout
+primaryColor = "#c4452f"
+backgroundColor = "#f5f0e8"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#2b2b2b"
+font = "Georgia"
 
 [server]
 headless = true                         # ✅ Required for Streamlit Cloud
 enableCORS = false
 enableXsrfProtection = false
-port = 8501                             # Default port Streamlit listens to
+port = 8501
 
 [client]
 showSidebarNavigation = true

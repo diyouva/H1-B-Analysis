@@ -157,7 +157,7 @@ with tab1:
         .reset_index()
     )
 
-    # ✅ Sort descending (largest on top)
+    # Sort descending (largest on top)
     top_emp = top_emp.sort_values("Total_Approvals", ascending=True)
 
     # --- Horizontal bar chart ---
