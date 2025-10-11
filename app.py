@@ -373,6 +373,21 @@ with tab2:
 
     col1, col2 = st.columns(2)
 
+    # Calculate a threshold for "short" bars (10% of the max value)
+    threshold_approvals = top_approvals["Total_Approvals"].max() * 0.1
+    threshold_adaptive = top_adapt["adaptive_score"].max() * 0.1
+
+    # Create dynamic position lists
+    positions_approvals = [
+        "inside" if x > threshold_approvals else "outside"
+        for x in top_approvals["Total_Approvals"]
+    ]
+
+    positions_adaptive = [
+        "inside" if x > threshold_adaptive else "outside"
+        for x in top_adapt["adaptive_score"]
+    ]
+
     with col1:
         fig_approvals = px.bar(
             top_approvals,
@@ -386,7 +401,7 @@ with tab2:
         )
         fig_approvals.update_traces(
             texttemplate="%{x:,.0f}",
-            textposition="outside",
+            textposition=positions_approvals,
             marker_line_color="#2b2b2b",
             marker_line_width=0.8,
         )
@@ -415,7 +430,7 @@ with tab2:
 
         fig_adaptive.update_traces(
             texttemplate="%{x:.2f}",
-            textposition="outside",
+            textposition=positions_adaptive,
             textfont=dict(family="Georgia", size=14, color="#2b2b2b"),
             marker_line_color="#2b2b2b",
             marker_line_width=0.8,
